@@ -157,7 +157,7 @@ In the initial version (v1), relay operators form a trusted, permissioned set, w
 
 The group identified the following benefits of the design: 
 
-**Faster confirmations.** Users receive intermediate confirmations after each sub-slot (\~1 second) rather than waiting the full 12 seconds. This makes transacting on Ethereum L1 feel faster without requiring any protocol changes, and allows multiple sequential transactions per slot. 
+**Faster confirmations.** Users receive intermediate confirmations after each sub-slot (~1 second) rather than waiting the full 12 seconds. This makes transacting on Ethereum L1 feel faster without requiring any protocol changes, and allows multiple sequential transactions per slot. 
 
 **More competition.** Today, a single builder with the best exclusive order flow wins the entire slot. Sub-slots allow multiple builders to contribute to a single final block. 
 
@@ -188,14 +188,14 @@ Together, block merging and sub-slot auctions unlock scalable multi-party block 
 
 Merging and sub-slots combine into scalable multi-party block building. This increases block value, censorship resistance, user experience, and makes Ethereum a more competitive and neutral venue. The following table summarises the improvements discussed in the workshop: 
 
-|  | Today | Multi-Party Block Building (merging) | Multi-Party Block Building (merging \+ subslots) |
+|  | Today | Multi-Party Block Building (merging) | Multi-Party Block Building (merging + subslots) |
 | ----- | ----- | ----- | ----- |
-| **Who builds the block** | One winning builder | Winning builder \+ contributing builders via relay | Multiple builders across \~12 sub-slots \+ merging |
-| **Inclusion opportunities per slot** | 1 (winning builder) | 2 (winning builder \+ merging) | Up to 24 for 1s sub-slots (winning builder \+ merging, per sub-slot) |
-| **User confirmation latency** | 12 seconds | 12 seconds | \~1 second |
+| **Who builds the block** | One winning builder | Winning builder + contributing builders via relay | Multiple builders across ~12 sub-slots + merging |
+| **Inclusion opportunities per slot** | 1 (winning builder) | 2 (winning builder + merging) | Up to 24 for 1s sub-slots (winning builder + merging, per sub-slot) |
+| **User confirmation latency** | 12 seconds | 12 seconds | ~1 second |
 | **Relay Compensation** | None | Share of surplus generated for the slot | Share of surplus generated for multiple sub-slots |
 | **Builder entry barrier** | Must win entire slot | Can contribute to winning block | Can win sub-slots and contribute to sub-slots |
-| **Censorship resistance** | Limited to winning builder's inclusion | Winning builder’s inclusion \+ merging | Multiple builder’s inclusion \+ merging |
+| **Censorship resistance** | Limited to winning builder's inclusion | Winning builder’s inclusion + merging | Multiple builder’s inclusion + merging |
 
 ![The Blockspace Forum will soon return](../../../assets/learn/events/cannes-6.png)
 

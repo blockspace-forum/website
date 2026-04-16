@@ -145,7 +145,7 @@
 <figure><img alt="Sub-slot auction" src="../../../assets/learn/events/cannes-5.gif"><figcaption>The sub-block with the most valuable bid is carried forward to the next sub-slot.</figcaption></figure>
 <h3><strong>Impact for Users and Ethereum</strong></h3>
 <p>The group identified the following benefits of the design:</p>
-<p><strong>Faster confirmations.</strong> Users receive intermediate confirmations after each sub-slot (\~1 second) rather than waiting the full 12 seconds. This makes transacting on Ethereum L1 feel faster without requiring any protocol changes, and allows multiple sequential transactions per slot.</p>
+<p><strong>Faster confirmations.</strong> Users receive intermediate confirmations after each sub-slot (~1 second) rather than waiting the full 12 seconds. This makes transacting on Ethereum L1 feel faster without requiring any protocol changes, and allows multiple sequential transactions per slot.</p>
 <p><strong>More competition.</strong> Today, a single builder with the best exclusive order flow wins the entire slot. Sub-slots allow multiple builders to contribute to a single final block.</p>
 <p><strong>Better censorship resistance.</strong> More sub-slots mean more frequent inclusion opportunities. Transactions that would have been excluded by the winning builder can find inclusion in later sub-slots or through merging.</p>
 <p><strong>Composability with merging.</strong> Transactions can be merged in by the relay for each sub-slot, preserving full compatibility with the block merging design from Session 1. This further increases block value, censorship resistance, and the number of parties contributing to blocks.</p>
@@ -181,7 +181,7 @@
 <td><strong>Who builds the block</strong></td>
 <td>One winning builder</td>
 <td>Winning builder + contributing builders via relay</td>
-<td>Multiple builders across \~12 sub-slots + merging</td>
+<td>Multiple builders across ~12 sub-slots + merging</td>
 </tr>
 <tr>
 <td><strong>Inclusion opportunities per slot</strong></td>
@@ -193,7 +193,7 @@
 <td><strong>User confirmation latency</strong></td>
 <td>12 seconds</td>
 <td>12 seconds</td>
-<td>\~1 second</td>
+<td>~1 second</td>
 </tr>
 <tr>
 <td><strong>Relay Compensation</strong></td>
