@@ -89,14 +89,74 @@ const SITE_CONFIG = {
       year: "2026",
       description: "The second Blockspace Forum gathering. Workshops, research presentations, and working sessions on the future of Ethereum's blockspace market.",
       video: "https://www.youtube.com/embed/ixJDu_h4unQ",
-      status: "Read the latest",
+      status: "Workshop Summary",
       link: "learn/events/cannes-2026.html",
+      videos: [
+        {
+          title: "Kick-Off — Kubi Mensah (Gattaca)",
+          summary: "Forum framing: Ethereum's core product is blockspace. The mission is conversations to specs to MVPs to production code.",
+          video: "https://www.youtube.com/embed/W279wYFI0EI",
+        },
+        {
+          title: "Inside the pipeline: Data driven truths of Ethereum's supply chain — Lorenzo (Gattaca) & Christian (ultra sound)",
+          summary: "50ms CEX-DEX replacement latency. 7M bundles per hour at peak. 90% of blocks via relays. Timing games quantified.",
+          video: "https://www.youtube.com/embed/di5a6BF2bII",
+        },
+        {
+          title: "Gwei GPT: Ethereum transaction rails in an AI world — Alex Stokes (EF)",
+          summary: "How AI reshapes every layer: intent explosion, wallet disappearance, solver markets, builder vertical integration, and the security arms race.",
+          video: "https://www.youtube.com/embed/kWUwyg0J-Dc",
+        },
+        {
+          title: "ePBS Fireside Chat — Terence (Prysm) & Alex (ultra sound)",
+          summary: "Devnet 0 complete, Devnet 1 started. PTC deadline debate. Does ePBS kill relays? Testing is the bottleneck. Q2/Q3 estimate for mainnet.",
+          video: "https://www.youtube.com/embed/B-rk9FISVEE",
+        },
+        {
+          title: "EIP-7928: Block-Level Access Lists and what it means for builders — Toni (EF)",
+          summary: "How BALs enable parallel execution, faster sync, and gas limit scaling from 60M to 300M. Builder impact under ePBS: less build time, but can start earlier by applying state asynchronously.",
+          video: "https://www.youtube.com/embed/5kRqSvwDPSE",
+        },
+        {
+          title: "Institutional Investment — Zach (Grayscale) & Nixo (EF)",
+          summary: "ETH as commodity investing. Trust over speed and scale. Stablecoins plus tokenization equals Ethereum. The macro backdrop and dollar skepticism.",
+          video: "https://www.youtube.com/embed/ehYESl6Pdd4",
+        },
+        {
+          title: "Issuance and why the transaction pipeline should care — Jerome (Ethereum France)",
+          summary: "The diamond rule: max 0.5% issuance. 33.3M ETH staked and trending to 40%. Security problems, LST substitution risk, and the snowball effect.",
+          video: "https://www.youtube.com/embed/E8f8DHzpDnQ",
+        },
+        {
+          title: "The proof is in the building — Sean (Sigma Prime)",
+          summary: "Generating validity proofs in under 10 seconds. How the ePBS slot structure creates a natural proving window. Parallel proving and L2 horizontal scaling.",
+          video: "https://www.youtube.com/embed/Lw_z2bjD_cM",
+        },
+        {
+          title: "I can see all your transactions: Privacy and what institutions need — Mo (EF)",
+          summary: "It turns out large institutions and governments really care about the same properties we do: censorship resistance, open source, privacy, and security.",
+          video: "https://www.youtube.com/embed/AnfW2Rk97FE",
+        },
+        {
+          title: "Builder Services & Exclusive Flow — Panel",
+          summary: "Builders compete on trust, execution guarantees, privacy, and latency. The exclusive order flow flywheel. Platform business model thinking.",
+          video: "https://www.youtube.com/embed/-dJhPc4aKbc",
+        },
+        {
+          title: "Post-Quantum & ETH Vision — Fede (Lambda Class) & Justin Drake (EF)",
+          summary: "Neutral atoms: 6K qubits today, 26K theoretically. Post-quantum heartbeat design. ETH as the internet of value. Shielded L1 transfers.",
+          video: "https://www.youtube.com/embed/UMKEV_g15OY",
+        },
+      ],
     },
     {
       title: "Blockspace Forum @ Devconnect BA",
       location: "Buenos Aires, Argentina",
       year: "2025",
       description: "The inaugural event. Comparing notes on what's working, what's brittle, and what's being left on the table in Ethereum's blockspace pipeline.",
+      header_description: "Blockspace Forum's first event in Buenos Aires, 2025.",
+      status: "Workshop Summary",
+      link: "https://ethresear.ch/t/an-observation-on-ethereum-s-blockspace-market/23669",
     },
   ],
 

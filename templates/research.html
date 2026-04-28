@@ -29,7 +29,21 @@
     </section>
 
     <section class="section-block" style="border-top: none;">
-      <div id="research-all" class="research-grid"></div>
+      <h2 id="events">Events</h2>
+      <p class="section-description">Recaps and resources from Blockspace Forum gatherings.</p>
+      <div id="research-events" class="learn-posts-grid"></div>
+    </section>
+
+    <section class="section-block">
+      <h2 id="technical-research">Technical Research</h2>
+      <p class="section-description">Deep technical analysis and protocol research published on Ethereum Research.</p>
+      <div id="research-technical" class="research-grid"></div>
+    </section>
+
+    <section class="section-block">
+      <h2 id="general-writing">General Writing</h2>
+      <p class="section-description">The Blockspace Forum series: an educational thread on Ethereum's transaction pipeline.</p>
+      <div id="research-writing"></div>
     </section>
   </main>
 
@@ -38,7 +52,9 @@
   <script src="config.js"></script>
   <script src="js/main.js"></script>
   <script>
-    renderResearchList('research-all', false);
+    renderLearnEvents('research-events');
+    renderResearchList('research-technical', false);
+    renderPostList('research-writing');
   </script>
 </body>
 </html>

@@ -32,6 +32,28 @@ function buildSocialHtml() {
   return html;
 }
 
+// ---- YouTube Lazy Embed ---- //
+
+function youtubeLazyHtml(url, title) {
+  var match = url.match(/embed\/([^?&#]+)/);
+  var id = match ? match[1] : '';
+  if (!id) {
+    return '<iframe src="' + url + '" title="' + title + '" width="560" height="315" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>';
+  }
+  return '<div class="video-embed video-embed--lazy" data-video-id="' + id + '" data-title="' + title + '"><div class="video-thumb" style="background-image:url(https://img.youtube.com/vi/' + id + '/sddefault.jpg)"><div class="video-play-btn"><svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></div></div></div>';
+}
+
+// Global click handler for lazy YouTube embeds
+document.addEventListener('click', function(e) {
+  var thumb = e.target.closest('.video-embed--lazy');
+  if (!thumb) return;
+  var id = thumb.dataset.videoId;
+  var title = thumb.dataset.title;
+  if (!id) return;
+  var parent = thumb.parentNode;
+  parent.innerHTML = '<iframe src="https://www.youtube.com/embed/' + id + '?autoplay=1&rel=0" title="' + title + '" width="560" height="315" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>';
+});
+
 // ---- Nav ---- //
 
 function renderNav() {
@@ -93,6 +115,8 @@ function renderNav() {
   if (hash === '#tooling' && (path.endsWith('/') || path.endsWith('index.html'))) {
     activeLink = 'tooling';
   } else if (path.includes('research')) {
+    activeLink = 'research';
+  } else if (path.includes('learn/series')) {
     activeLink = 'research';
   } else if (path.includes('events')) {
     activeLink = 'events';
@@ -276,36 +300,148 @@ function renderEventsList(containerId) {
   var container = document.getElementById(containerId);
   if (!container) return;
 
-  SITE_CONFIG.events.forEach(function(evt) {
-    var article = document.createElement('article');
-    article.className = 'event-card';
+  var events = SITE_CONFIG.events.slice().sort(function(a, b) {
+    return parseInt(b.year) - parseInt(a.year);
+  });
 
-    var mediaHtml;
-    if (evt.video) {
-      mediaHtml = '<div class="event-media"><div class="video-embed">' +
-        '<iframe src="' + evt.video + '" title="' + evt.title + '" frameborder="0" ' +
-        'allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>' +
-        '</div></div>';
+  events.forEach(function(evt) {
+    if (evt.videos && evt.videos.length) {
+      renderEventSection(container, evt);
     } else {
-      mediaHtml = '<div class="event-media"><div class="event-placeholder">' +
-        '<svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">' +
-        '<rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>' +
-        '<line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line>' +
-        '<line x1="3" y1="10" x2="21" y2="10"></line></svg>' +
+      renderEventCard(container, evt);
+    }
+  });
+}
+
+function renderEventCard(container, evt) {
+  var section = document.createElement('div');
+  section.className = 'event-section';
+
+  var header = document.createElement('div');
+  header.className = 'event-section-header';
+  header.innerHTML = '<span class="event-date">' + evt.year + ' &middot; ' + evt.location + '</span>' +
+    '<h2>' + evt.title + '</h2>' +
+    '<p>' + (evt.header_description || evt.description) + '</p>';
+  section.appendChild(header);
+
+  var article = document.createElement('article');
+  article.className = 'event-card';
+
+  var mediaHtml;
+  if (evt.video) {
+    mediaHtml = '<div class="event-media">' +
+      youtubeLazyHtml(evt.video, evt.title) +
+      '</div>';
+  } else {
+    mediaHtml = '<div class="event-media"><div class="event-placeholder event-placeholder-logo">' +
+      '<img src="' + BASE + 'assets/logo.jpg" alt="' + evt.title + '" style="max-width: 80px; max-height: 80px; border-radius: 8px; opacity: 0.6;">' +
+      '</div></div>';
+  }
+
+  var linkAttrs = evt.link && evt.link.indexOf('http') === 0 ? 'href="' + evt.link + '" target="_blank" rel="noopener"' : 'href="' + evt.link + '"';
+  var infoHtml = '<div class="event-info">' +
+    '<span class="event-date">' + evt.year + ' &middot; ' + evt.location + '</span>' +
+    '<h2>' + evt.title + '</h2>' +
+    '<p>' + evt.description + '</p>' +
+    (evt.status && evt.link ? '<a ' + linkAttrs + ' class="status-label status-link">' + evt.status + ' &rarr;</a>' : '') +
+    (evt.status && !evt.link ? '<span class="status-label">' + evt.status + '</span>' : '') +
+    '</div>';
+
+  article.innerHTML = mediaHtml + infoHtml;
+  section.appendChild(article);
+  container.appendChild(section);
+}
+
+function renderEventSection(container, evt) {
+  var section = document.createElement('div');
+  section.className = 'event-section';
+
+  // Header
+  var header = document.createElement('div');
+  header.className = 'event-section-header';
+  header.innerHTML = '<span class="event-date">' + evt.year + ' &middot; ' + evt.location + '</span>' +
+    '<h2>' + evt.title + '</h2>' +
+    '<p>' + (evt.header_description || evt.description) + '</p>';
+  section.appendChild(header);
+
+  // Recap subsection
+  var recapSub = document.createElement('div');
+  recapSub.className = 'event-subsection';
+  recapSub.innerHTML = '<h3>Recap</h3>';
+
+  var recapCard = document.createElement('div');
+  recapCard.className = 'event-card';
+
+  var mediaHtml = '<div class="event-media">' +
+    youtubeLazyHtml(evt.video, evt.title) +
+    '</div>';
+
+  var infoHtml = '<div class="event-info">' +
+    '<span class="event-date">' + evt.year + ' &middot; ' + evt.location + '</span>' +
+    '<h2>' + evt.title + '</h2>' +
+    '<p>' + evt.description + '</p>' +
+    (evt.status && evt.link ? '<a href="' + evt.link + '" class="status-label status-link">' + evt.status + ' &rarr;</a>' : '') +
+    (evt.status && !evt.link ? '<span class="status-label">' + evt.status + '</span>' : '') +
+    '</div>';
+
+  recapCard.innerHTML = mediaHtml + infoHtml;
+  recapSub.appendChild(recapCard);
+  section.appendChild(recapSub);
+
+  // Talks subsection
+  var talksSub = document.createElement('div');
+  talksSub.className = 'event-subsection';
+  talksSub.id = 'talks';
+
+  var toggleId = 'event-videos-' + evt.year;
+  var videosContainer = document.createElement('div');
+  videosContainer.id = toggleId;
+  videosContainer.className = 'event-videos';
+
+  var talksHeader = document.createElement('h3');
+  talksHeader.className = 'event-talks-header';
+  talksHeader.innerHTML = 'Talks <span class="caret" aria-hidden="true">&#9662;</span>';
+  talksHeader.setAttribute('role', 'button');
+  talksHeader.setAttribute('aria-expanded', 'true');
+  talksHeader.setAttribute('aria-controls', toggleId);
+  talksHeader.style.cursor = 'pointer';
+
+  evt.videos.forEach(function(v) {
+    var article = document.createElement('article');
+    article.className = 'video-card';
+
+    var vMedia;
+    if (v.video) {
+      vMedia = '<div class="video-card-media">' +
+        youtubeLazyHtml(v.video, v.title) +
+        '</div>';
+    } else {
+      vMedia = '<div class="video-card-media"><div class="event-placeholder event-placeholder-logo">' +
+        '<img src="' + BASE + 'assets/logo.jpg" alt="' + v.title + '" style="max-width: 80px; max-height: 80px; border-radius: 8px; opacity: 0.6;">' +
         '</div></div>';
     }
 
-    var infoHtml = '<div class="event-info">' +
-      '<span class="event-date">' + evt.year + ' &middot; ' + evt.location + '</span>' +
-      '<h2>' + evt.title + '</h2>' +
-      '<p>' + evt.description + '</p>' +
-      (evt.status && evt.link ? '<a href="' + evt.link + '" class="status-label status-link">' + evt.status + ' &rarr;</a>' : '') +
-      (evt.status && !evt.link ? '<span class="status-label">' + evt.status + '</span>' : '') +
+    var vInfo = '<div class="video-card-info">' +
+      '<h3>' + v.title + '</h3>' +
+      (v.summary ? '<p>' + v.summary + '</p>' : '') +
       '</div>';
 
-    article.innerHTML = mediaHtml + infoHtml;
-    container.appendChild(article);
+    article.innerHTML = vMedia + vInfo;
+    videosContainer.appendChild(article);
   });
+
+  talksHeader.addEventListener('click', function() {
+    var expanded = talksHeader.getAttribute('aria-expanded') === 'true';
+    talksHeader.setAttribute('aria-expanded', !expanded);
+    videosContainer.style.display = expanded ? 'none' : 'flex';
+    talksHeader.querySelector('.caret').innerHTML = expanded ? '&#9656;' : '&#9662;';
+  });
+
+  talksSub.appendChild(talksHeader);
+  talksSub.appendChild(videosContainer);
+  section.appendChild(talksSub);
+
+  container.appendChild(section);
 }
 
 function renderLearnEvents(containerId) {
@@ -337,10 +473,9 @@ function renderLatestEvent(containerId) {
 
   var mediaHtml;
   if (evt.video) {
-    mediaHtml = '<div class="event-media"><div class="video-embed">' +
-      '<iframe src="' + evt.video + '" title="' + evt.title + '" frameborder="0" ' +
-      'allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>' +
-      '</div></div>';
+    mediaHtml = '<div class="event-media">' +
+      youtubeLazyHtml(evt.video, evt.title) +
+      '</div>';
   } else {
     mediaHtml = '<div class="event-media"><div class="event-placeholder">' +
       '<svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">' +
@@ -355,7 +490,8 @@ function renderLatestEvent(containerId) {
     '<h2>' + evt.title + '</h2>' +
     '<p>' + evt.description + '</p>' +
     (evt.status && evt.link ? '<a href="' + evt.link + '" class="status-label status-link">' + evt.status + ' &rarr;</a>' : '') +
-      (evt.status && !evt.link ? '<span class="status-label">' + evt.status + '</span>' : '') +
+    (evt.status && !evt.link ? '<span class="status-label">' + evt.status + '</span>' : '') +
+    (evt.videos && evt.videos.length ? '<a href="' + BASE + 'events.html#talks" class="status-label status-link">Talks &rarr;</a>' : '') +
     '</div>';
 
   article.innerHTML = mediaHtml + infoHtml;
