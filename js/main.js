@@ -32,6 +32,28 @@ function buildSocialHtml() {
   return html;
 }
 
+// ---- YouTube Lazy Embed ---- //
+
+function youtubeLazyHtml(url, title) {
+  var match = url.match(/embed\/([^?&#]+)/);
+  var id = match ? match[1] : '';
+  if (!id) {
+    return '<iframe src="' + url + '" title="' + title + '" width="560" height="315" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>';
+  }
+  return '<div class="video-embed video-embed--lazy" data-video-id="' + id + '" data-title="' + title + '"><div class="video-thumb" style="background-image:url(https://img.youtube.com/vi/' + id + '/sddefault.jpg)"><div class="video-play-btn"><svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></div></div></div>';
+}
+
+// Global click handler for lazy YouTube embeds
+document.addEventListener('click', function(e) {
+  var thumb = e.target.closest('.video-embed--lazy');
+  if (!thumb) return;
+  var id = thumb.dataset.videoId;
+  var title = thumb.dataset.title;
+  if (!id) return;
+  var parent = thumb.parentNode;
+  parent.innerHTML = '<iframe src="https://www.youtube.com/embed/' + id + '?autoplay=1&rel=0" title="' + title + '" width="560" height="315" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>';
+});
+
 // ---- Nav ---- //
 
 function renderNav() {
@@ -307,10 +329,9 @@ function renderEventCard(container, evt) {
 
   var mediaHtml;
   if (evt.video) {
-    mediaHtml = '<div class="event-media"><div class="video-embed">' +
-      '<iframe src="' + evt.video + '" title="' + evt.title + '" frameborder="0" ' +
-      'allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>' +
-      '</div></div>';
+    mediaHtml = '<div class="event-media">' +
+      youtubeLazyHtml(evt.video, evt.title) +
+      '</div>';
   } else {
     mediaHtml = '<div class="event-media"><div class="event-placeholder event-placeholder-logo">' +
       '<img src="' + BASE + 'assets/logo.jpg" alt="' + evt.title + '" style="max-width: 80px; max-height: 80px; border-radius: 8px; opacity: 0.6;">' +
@@ -351,10 +372,9 @@ function renderEventSection(container, evt) {
   var recapCard = document.createElement('div');
   recapCard.className = 'event-card';
 
-  var mediaHtml = '<div class="event-media"><div class="video-embed">' +
-    '<iframe src="' + evt.video + '" title="' + evt.title + '" frameborder="0" ' +
-    'allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>' +
-    '</div></div>';
+  var mediaHtml = '<div class="event-media">' +
+    youtubeLazyHtml(evt.video, evt.title) +
+    '</div>';
 
   var infoHtml = '<div class="event-info">' +
     '<span class="event-date">' + evt.year + ' &middot; ' + evt.location + '</span>' +
@@ -392,10 +412,9 @@ function renderEventSection(container, evt) {
 
     var vMedia;
     if (v.video) {
-      vMedia = '<div class="video-card-media"><div class="video-embed">' +
-        '<iframe src="' + v.video + '" title="' + v.title + '" frameborder="0" ' +
-        'allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>' +
-        '</div></div>';
+      vMedia = '<div class="video-card-media">' +
+        youtubeLazyHtml(v.video, v.title) +
+        '</div>';
     } else {
       vMedia = '<div class="video-card-media"><div class="event-placeholder event-placeholder-logo">' +
         '<img src="' + BASE + 'assets/logo.jpg" alt="' + v.title + '" style="max-width: 80px; max-height: 80px; border-radius: 8px; opacity: 0.6;">' +
@@ -454,10 +473,9 @@ function renderLatestEvent(containerId) {
 
   var mediaHtml;
   if (evt.video) {
-    mediaHtml = '<div class="event-media"><div class="video-embed">' +
-      '<iframe src="' + evt.video + '" title="' + evt.title + '" frameborder="0" ' +
-      'allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>' +
-      '</div></div>';
+    mediaHtml = '<div class="event-media">' +
+      youtubeLazyHtml(evt.video, evt.title) +
+      '</div>';
   } else {
     mediaHtml = '<div class="event-media"><div class="event-placeholder">' +
       '<svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">' +
