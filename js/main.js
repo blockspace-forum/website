@@ -388,14 +388,21 @@ function renderEventSection(container, evt) {
     var article = document.createElement('article');
     article.className = 'video-card';
 
-    var vMedia = '<div class="video-card-media"><div class="video-embed">' +
-      '<iframe src="' + v.video + '" title="' + v.title + '" frameborder="0" ' +
-      'allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>' +
-      '</div></div>';
+    var vMedia;
+    if (v.video) {
+      vMedia = '<div class="video-card-media"><div class="video-embed">' +
+        '<iframe src="' + v.video + '" title="' + v.title + '" frameborder="0" ' +
+        'allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>' +
+        '</div></div>';
+    } else {
+      vMedia = '<div class="video-card-media"><div class="event-placeholder event-placeholder-logo">' +
+        '<img src="' + BASE + 'assets/logo.jpg" alt="' + v.title + '" style="max-width: 80px; max-height: 80px; border-radius: 8px; opacity: 0.6;">' +
+        '</div></div>';
+    }
 
     var vInfo = '<div class="video-card-info">' +
       '<h3>' + v.title + '</h3>' +
-      '<p>' + v.summary + '</p>' +
+      (v.summary ? '<p>' + v.summary + '</p>' : '') +
       '</div>';
 
     article.innerHTML = vMedia + vInfo;
