@@ -2243,6 +2243,12 @@ footer a:hover {
 
 /* Mobile nav */
 @media (max-width: 768px) {
+  nav {
+    background: #000;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+
   .nav-hamburger {
     display: block;
   }
@@ -2252,14 +2258,15 @@ footer a:hover {
     position: fixed;
     top: 0;
     left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.98);
+    width: 100vw;
+    height: 100vh;
+    background: #000;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
     gap: 2rem;
     z-index: 105;
+    padding-top: 5.5rem;
   }
 
   .nav-right.is-open {
@@ -2273,7 +2280,8 @@ footer a:hover {
   }
 
   .nav-links a {
-    font-size: 1.1rem;
+    font-size: 1.25rem;
+    color: var(--text-primary);
   }
 
   .nav-socials {
