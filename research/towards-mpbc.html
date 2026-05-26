@@ -18,6 +18,16 @@
   <link rel="icon" href="../assets/favicon.ico">
   <link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
   <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"
+    onload="renderMathInElement(document.querySelector('.post-content'), {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$', right: '$', display: false}
+      ],
+      throwOnError: false
+    });"></script>
 </head>
 <body data-base="../">
   <nav id="site-nav"></nav>
@@ -40,13 +50,13 @@
 <li>The design starts to address structural gaps, improves the robustness of Ethereum, and better matches the supply and demand of blockspace by allowing transactions unknown to or filtered by individual builders to find inclusion.</li>
 <li>This design is a first iteration. There are remaining gaps and open questions which we look forward to continuing to address with the teams that have already contributed and the wider Ethereum community.</li>
 </ul>
-<h1>Background</h1>
-<p>The Blockspace Forum is a gathering of industry participants with the purpose of improving the transaction journey on Ethereum. The most recent iteration was held in Cannes in April 2026, bringing together 32 teams, including block builders and relays accounting for more than 95% of all blocks constructed out of protocol. A detailed recap of the workshop <a href="https://blockspace.forum/learn/events/cannes-2026.html">can be accessed here</a>.</p>
+<h2>Background</h2>
+<p>The Blockspace Forum is a gathering of industry participants with the purpose of improving the transaction journey on Ethereum. The most recent iteration was held in Cannes in April 2026, bringing together 32 teams, including block builders and relays accounting for more than 95% of all blocks constructed out of protocol. A detailed recap of the workshop <a href="/learn/events/cannes-2026.html">can be accessed here</a>.</p>
 <p>The goal of the Cannes workshop was to explore solutions to the structural gaps in the transaction pipeline identified at the preceding Buenos Aires iteration of the Forum. These gaps limit the economics, robustness, performance, and service compatibility of blockspace, imposing an opportunity cost on transaction originators, builders, infrastructure providers like relays, and validators. A detailed description of these challenges is <a href="https://ethresear.ch/t/an-observation-on-ethereum-s-blockspace-market/23669">available here</a>.</p>
 <p>This post introduces Multi-Party Block Construction (MPBC), which allows multiple parties to contribute to a single block. The design is strictly additive, extending blockspace allocation from a single builder’s limited view to the shared view of multiple builders. These multiple inclusion lanes allow transactions to find inclusion even when they are not available to or filtered by individual builders. This redesign aims to better match blockspace supply and demand, and starts to address the transaction pipeline’s structural gaps.</p>
 <p>MPBC is based on the Cannes and Buenos Aires workshops, and research and conversations across the Ethereum ecosystem. We expect the initial design to evolve in collaboration with the community, including the many parties that have already contributed to the Blockspace Forum and related research. We welcome feedback, and look forward to continuing the conversation here, and <a href="https://x.com/blockspaceforum">on X</a>.</p>
-<p>This post assumes familiarity with proposer-builder separation and the structural gaps in Ethereum’s current transaction pipeline.  A primer covering both is available on the <a href="https://blockspace.forum/learn.html">Blockspace Forum&rsquo;s website</a>.</p>
-<h2>The Current Solution Landscape</h2>
+<p>This post assumes familiarity with proposer-builder separation and the structural gaps in Ethereum’s current transaction pipeline.  A primer covering both is available <a href="/learn.html#intro-to-blockspace">here</a>.</p>
+<h3>The Current Solution Landscape</h3>
 <p>The Blockspace Forum workshops surveyed several active approaches to improving out-of-protocol block construction. These complement each other to address different originator preferences:</p>
 <ul>
 <li><a href="https://buildernet.org/">BuilderNet</a> (Flashbots, Beaverbuild, Nethermind) uses TEEs to reduce trust assumptions and enable shared order flow.</li>
@@ -55,7 +65,7 @@
 <li><a href="https://www.mev-commit.xyz/">mev-commit</a> develops preconfirmations and block positioning bids for inclusion<strong>.</strong></li>
 </ul>
 <p>MPBC aims to allow collaborative block building across these and other new solutions, and centralized block builders. This initial design expands on earlier proposals including <a href="https://ethresear.ch/t/relay-block-merging-boosting-value-censorship-resistance/22592">relay block merging</a>, <a href="https://ethresear.ch/t/relay-inclusion-lists/22218">relay inclusion lists</a>, and <a href="https://ethresear.ch/t/block-constraints-sharing-multi-relay-inclusion-lists-beyond/22752">multi-relay inclusion lists</a>.</p>
-<h2>Terminology</h2>
+<h3>Terminology</h3>
 <p>This document uses the following terms throughout.</p>
 <table>
 <thead>
@@ -115,7 +125,7 @@
 </tr>
 </tbody>
 </table>
-<h1>An Initial Design of Multi-Party Block Construction</h1>
+<h2>An Initial Design of Multi-Party Block Construction</h2>
 <p>MPBC extends PBS by allowing the highest-bid single-builder block to be improved with eligible contributions from other builders. The figures below compare today’s pipeline with the initial MPBC design.</p>
 <p><strong>The current PBS block construction pipeline</strong></p>
 <p><img alt="Schematic illustration of the current PBS block construction pipeline. " src="../../assets/research/current-pbs-pipeline.png"></p>
@@ -195,7 +205,7 @@
 <tbody>
 <tr>
 <td><strong>Economics</strong></td>
-<td>• Price discovery limited to a single builder&rsquo;s view of transactions.  • No compensation for key actors.<br>• No support for forward markets, leaving users exposed to gas volatility.</td>
+<td>• Price discovery limited to a single builder&rsquo;s view of transactions.<br>• No compensation for key actors.<br>• No support for forward markets, leaving users exposed to gas volatility.</td>
 <td>• Price discovery over multiple builders’ views of transactions.<br>• Operator compensation proportional to value generation.<br>• Forward markets enabled through multiple inclusion paths for advance commitments.</td>
 </tr>
 <tr>
@@ -215,12 +225,12 @@
 </tr>
 </tbody>
 </table>
-<h2>MPBC Mechanism</h2>
+<h3>MPBC Mechanism</h3>
 <p>Operators append eligible transactions from contributing builders to the highest-bid single-party block. At delivery time, they compare the resulting multi-party block against the latest highest-bid single-party block and deliver the higher-paying of the two to the proposer.</p>
 <p>The mechanism’s value scales with decentralization and the number of builders participating in it. The more fragmented transaction flow is among builders, the less encompassing the execution guarantees any individual builder can provide. If the base builder has not issued execution guarantees for some state, it can be accessed by merged transactions.</p>
 <p>The initial scope is limited to transactions that do not compete for contentious state, such as simple transfers or self-contained transaction bundles. This enables fast append-only merging while preserving the execution guarantees of the base block.</p>
 <p>Future iterations may expand this scope to include oracle updates, active enforcement of proposer services such as preconfirmations, additional operator coordination, and networking improvements.</p>
-<h3>Implementation</h3>
+<h4>Implementation</h4>
 <p>Operators extend the base block by appending missing service transactions such as proposer commitments, followed by other eligible transactions that increase block value, and transactions that distribute the newly added surplus. The mechanism unfolds in two stages, merging and delivery.</p>
 <p>The value unlocked per-block corresponds to the difference between the value of the multi-party block $B_{\text{MP}}$ and the value of the single-party block $B_{\text{SP}}$:</p>
 <p>$$
@@ -232,20 +242,16 @@ $$</p>
 <p>The merging stage commences whenever an operator has received blocks and transactions eligible for merging. To avoid burdening originators with unexpected latency or inclusion, builders decide which blocks can be extended, and which transactions can be added to other blocks. These flags are submitted with the block’s metadata. Once a builder allows a block to be extended, transaction selection is performed by the operator according to the merging rules.</p>
 <p>Operators execute the following steps:</p>
 <ol>
-<li>Operators identify constraints from the complete set of constraints $C$ that are absent in the highest-bid single-party block $B_{\text{SP}}$:</li>
-</ol>
-<p>$$
-C_{\text{missing}} = {\text{tx} \in C \mid \text{tx} \notin B_{\text{SP}}}
-$$</p>
-<ol>
+<li>Operators identify constraints from the complete set of constraints $C$ that are absent in the highest-bid single-party block $B_{\text{SP}}$:
+$$
+C_{\text{missing}} = \{\text{tx} \in C \mid \text{tx} \notin B_{\text{SP}}\}
+$$</li>
 <li>Operators attempt to merge these constraint transactions into $B_{\text{SP}}$. If this cannot be accomplished without changing the execution guarantees of $B_{\text{SP}}$, it is discarded, the second-highest-bid single-party block is designated $B_{\text{SP}}$, and the operator returns to step 1.</li>
-<li>For the highest-bid block $B_i$ of each opted-in builder $i$, the operator identifies the eligible transactions absent in $B_{\text{SP}}$:</li>
-</ol>
-<p>$$
-\text{Txns}<em _text_SP="\text{SP">{i/\text{SP}} = { \text{tx} \in B_i \mid \text{tx} \notin B</em>}
-$$}</p>
-<ol>
-<li>The operator merges from $\text{Txns}<em _text_SP="\text{SP">{i/\text{SP}}$ into $B</em>$.}}$, filtering out any transactions that would revert, creating the multi-party block $B_{\text{MP}</li>
+<li>For the highest-bid block $B_i$ of each opted-in builder $i$, the operator identifies the eligible transactions absent in $B_{\text{SP}}$:
+$$
+\text{Txns}_{i/\text{SP}} = \{ \text{tx} \in B_i \mid \text{tx} \notin B_{\text{SP}}\}
+$$</li>
+<li>The operator merges from $\text{Txns}_{i/\text{SP}}$ into $B_{\text{SP}}$, filtering out any transactions that would revert, creating the multi-party block $B_{\text{MP}}$.</li>
 <li>The operator calculates the surplus of the multi-party block $B_{\text{MP}}$ and appends any distribution transactions.</li>
 </ol>
 <p><strong>Delivery Stage</strong></p>
@@ -261,7 +267,7 @@ $$</p>
 <ol>
 <li>If $\Delta V \geq 0$ the operator returns the header of $B_{\text{MP}}$ to the proposer and splits the surplus as per the value distribution rule; otherwise, it falls back to the highest-bid single-party block.</li>
 </ol>
-<h2>Networking and Coordination</h2>
+<h3>Networking and Coordination</h3>
 <p>The merging mechanism operates within the constraints of the information available to individual operators, and the expected propagation latency to the proposer. Operators can coordinate to improve block value without conceding their competitive edge by sharing information that increases the expected time horizon and accuracy of block construction. This is incentive compatible as operator compensation is expected to scale with the value generated.</p>
 <p>Initially, operators may share the following categories of information with each other:</p>
 <ul>
@@ -270,7 +276,7 @@ $$</p>
 <li><strong>Payloads:</strong> Sharing execution payloads at the conclusion of the slot allows operators to combine their geographic coverage for more efficient propagation to attesters.</li>
 <li><strong>Demotions</strong>: Sharing information on builder demotions throughout the slot allows operators to enforce a consistent view of which builders are temporarily excluded, reducing the need for builders to post separate collateral with each operator.</li>
 </ul>
-<h1>Outlook</h1>
+<h2>Outlook</h2>
 <p>The MPBC design described in this post builds on the discussion at the Buenos Aires and Cannes Blockspace Forum workshops, and will continue to evolve as teams implement and test the system in production. Feedback from all teams in the block construction pipeline is welcome and will be actively solicited as the design matures.</p>
 <p><strong>Open Questions and Future Directions</strong></p>
 <p>Specific open questions and limitations include:</p>

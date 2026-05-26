@@ -802,6 +802,24 @@ nav .container {
   margin-right: 0.75rem;
 }
 
+.toc .toc-nested {
+  list-style: none;
+  padding: 0;
+  margin: 0.3rem 0 0 1.3rem;
+}
+
+.toc .toc-nested li {
+  margin-bottom: 0.25rem;
+}
+
+.toc .toc-nested li::before {
+  content: '—';
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  color: var(--text-muted);
+  margin-right: 0.65rem;
+}
+
 .toc a {
   color: var(--text-secondary);
   text-decoration: none;

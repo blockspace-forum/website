@@ -554,23 +554,46 @@ function initTableOfContents() {
   var header = document.querySelector('.post-header');
   if (!content || !header) return;
 
-  var headings = content.querySelectorAll('h2');
+  var headings = content.querySelectorAll('h2, h3');
   if (headings.length < 3) return;
 
-  headings.forEach(function(h, i) { h.id = 'section-' + (i + 1); });
+  var idCounter = 0;
+  headings.forEach(function(h) {
+    h.id = 'section-' + (++idCounter);
+  });
 
   var toc = document.createElement('div');
   toc.className = 'toc';
   toc.innerHTML = '<div class="toc-label">Contents</div>';
 
   var ol = document.createElement('ol');
-  headings.forEach(function(h, i) {
-    var li = document.createElement('li');
-    var a = document.createElement('a');
-    a.href = '#section-' + (i + 1);
-    a.textContent = h.textContent;
-    li.appendChild(a);
-    ol.appendChild(li);
+
+  headings.forEach(function(h) {
+    if (h.tagName === 'H2') {
+      var li = document.createElement('li');
+      li.className = 'toc-h2';
+      var a = document.createElement('a');
+      a.href = '#' + h.id;
+      a.textContent = h.textContent;
+      li.appendChild(a);
+      ol.appendChild(li);
+    } else if (h.tagName === 'H3') {
+      var lastLi = ol.lastElementChild;
+      if (!lastLi) return;
+      var nestedOl = lastLi.querySelector('ol');
+      if (!nestedOl) {
+        nestedOl = document.createElement('ol');
+        nestedOl.className = 'toc-nested';
+        lastLi.appendChild(nestedOl);
+      }
+      var li = document.createElement('li');
+      li.className = 'toc-h3';
+      var a = document.createElement('a');
+      a.href = '#' + h.id;
+      a.textContent = h.textContent;
+      li.appendChild(a);
+      nestedOl.appendChild(li);
+    }
   });
 
   toc.appendChild(ol);

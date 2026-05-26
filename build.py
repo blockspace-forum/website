@@ -102,6 +102,32 @@ def add_image_captions(html):
     return html
 
 
+def protect_math(body):
+    """Replace $$...$$ and $...$ math blocks with inert placeholders before
+    markdown processing, so underscores inside math aren't misinterpreted
+    as italic delimiters. Returns (processed_body, {placeholder: original})."""
+    import uuid
+    placeholders = {}
+
+    def replace_block(m):
+        key = f"\u23ceMATH{uuid.uuid4().hex[:6]}\u23ce"
+        placeholders[key] = m.group(0)
+        return key
+
+    # Block math first (longest delimiters, must match before inline)
+    body = re.sub(r'\$\$[^$]+\$\$', replace_block, body)
+    # Inline math: $ not adjacent to another $
+    body = re.sub(r'(?<!\$)\$(?!\$)[^$]+(?<!\$)\$(?!\$)', replace_block, body)
+    return body, placeholders
+
+
+def restore_math(html, placeholders):
+    """Restore math placeholders back to original LaTeX."""
+    for key, math in placeholders.items():
+        html = html.replace(key, math)
+    return html
+
+
 def join_multiline_table_cells(body):
     """Pre-process markdown table blocks: join lines not starting with | into the
     preceding table row. Converts trailing 2-space + newline to <br> so multi-
@@ -597,12 +623,18 @@ def build_research():
         # Join multi-line table cells before markdown conversion
         body = join_multiline_table_cells(body)
 
+        # Protect math blocks from markdown underscore processing
+        body, math_placeholders = protect_math(body)
+
         # Convert to HTML
         content_html = markdown.markdown(
             body,
             extensions=['extra', 'smarty'],
             output_format='html5'
         )
+
+        # Restore original math into the HTML output
+        content_html = restore_math(content_html, math_placeholders)
 
         html = render_template(template, {
             "title": title,

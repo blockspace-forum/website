@@ -18,6 +18,16 @@
   <link rel="icon" href="{{base}}assets/favicon.ico">
   <link rel="apple-touch-icon" href="{{base}}assets/apple-touch-icon.png">
   <link rel="stylesheet" href="{{base}}css/style.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"
+    onload="renderMathInElement(document.querySelector('.post-content'), {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$', right: '$', display: false}
+      ],
+      throwOnError: false
+    });"></script>
 </head>
 <body data-base="{{base}}">
   <nav id="site-nav"></nav>
