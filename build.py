@@ -286,8 +286,45 @@ def build_config(posts_meta, research_pages):
       date: "{r['date']}",
       summary: "{r['subtitle']}",
       url: "research/{r['slug']}.html",
-      featured: true
+      featured: true,
     }}''')
+
+    # Hardcoded research entries (external links)
+    hardcoded_research = [
+        f'''    {{
+      title: "An Observation on Ethereum's Blockspace Market",
+      authors: "Kubi M., Alex T., Kevin L., Justin D.",
+      date: "Dec 2025",
+      summary: "Structural analysis of PBS economics, robustness, performance, and services.",
+      url: "https://ethresear.ch/t/an-observation-on-ethereum-s-blockspace-market/23669",
+      featured: true,
+    }}''',
+        f'''    {{
+      title: "Block Constraints Sharing: Multi-Relay Inclusion Lists & Beyond",
+      authors: "Blockspace Forum",
+      date: "2025",
+      summary: "Inter-relay constraint coordination for inclusion list enforcement. Foreshadows relay consensus mechanisms for sub-slot auctions.",
+      url: "https://ethresear.ch/t/block-constraints-sharing-multi-relay-inclusion-lists-beyond/22752",
+      featured: true
+    }}''',
+        f'''    {{
+      title: "Block Merging: Boosting Value & Censorship Resistance",
+      authors: "Michael, Kubi",
+      date: "Jun 2025",
+      summary: "Merging top-of-block segments from multiple relays into a single, more valuable, censorship-resistant block.",
+      url: "https://ethresear.ch/t/relay-block-merging-boosting-value-censorship-resistance/22592",
+      featured: true,
+    }}''',
+        f'''    {{
+      title: "Relay Inclusion Lists",
+      authors: "Michael, Kubi",
+      date: "Apr 2025",
+      summary: "A mechanism for relays to enforce transaction inclusion, improving censorship resistance without protocol changes.",
+      url: "https://ethresear.ch/t/relay-inclusion-lists/22218",
+      featured: true
+    }}''',
+    ]
+    research_entries.extend(hardcoded_research)
     research_js = ",\n".join(research_entries)
 
     links = {
@@ -330,38 +367,6 @@ const SITE_CONFIG = {{
   }},
 
   research: [
-    {{
-      title: "An Observation on Ethereum's Blockspace Market",
-      authors: "Kubi M., Alex T., Kevin L., Justin D.",
-      date: "Dec 2025",
-      summary: "Structural analysis of PBS economics, robustness, performance, and services.",
-      url: "https://ethresear.ch/t/an-observation-on-ethereum-s-blockspace-market/23669",
-      featured: true,
-    }},
-    {{
-      title: "Block Constraints Sharing: Multi-Relay Inclusion Lists & Beyond",
-      authors: "Blockspace Forum",
-      date: "2025",
-      summary: "Inter-relay constraint coordination for inclusion list enforcement. Foreshadows relay consensus mechanisms for sub-slot auctions.",
-      url: "https://ethresear.ch/t/block-constraints-sharing-multi-relay-inclusion-lists-beyond/22752",
-      featured: true
-    }},
-    {{
-      title: "Block Merging: Boosting Value & Censorship Resistance",
-      authors: "Michael, Kubi",
-      date: "Jun 2025",
-      summary: "Merging top-of-block segments from multiple relays into a single, more valuable, censorship-resistant block.",
-      url: "https://ethresear.ch/t/relay-block-merging-boosting-value-censorship-resistance/22592",
-      featured: true,
-    }},
-    {{
-      title: "Relay Inclusion Lists",
-      authors: "Michael, Kubi",
-      date: "Apr 2025",
-      summary: "A mechanism for relays to enforce transaction inclusion, improving censorship resistance without protocol changes.",
-      url: "https://ethresear.ch/t/relay-inclusion-lists/22218",
-      featured: true
-    }},
 {research_js}
   ],
 
