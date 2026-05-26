@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Towards Multi-Party Block Construction — Blockspace Forum</title>
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Towards Multi-Party Block Construction — Blockspace Forum">
+  <meta property="og:description" content="Moving from one monolithic builder per block to multi-party blocks assembled from the contributions of multiple builders, widening blockspace allocation to their shared view.">
+  <meta property="og:image" content="https://blockspace.forum/assets/og-image.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@blockspaceforum">
+  <meta name="twitter:title" content="Towards Multi-Party Block Construction — Blockspace Forum">
+  <meta name="twitter:description" content="Moving from one monolithic builder per block to multi-party blocks assembled from the contributions of multiple builders, widening blockspace allocation to their shared view.">
+  <meta name="twitter:image" content="https://blockspace.forum/assets/og-image.png">
+  <meta name="description" content="Moving from one monolithic builder per block to multi-party blocks assembled from the contributions of multiple builders, widening blockspace allocation to their shared view.">
+  <link rel="canonical" href="https://blockspace.forum/research/towards-mpbc.html">
+  <link rel="icon" href="../assets/favicon.ico">
+  <link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"
+    onload="renderMathInElement(document.querySelector('.post-content'), {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$', right: '$', display: false}
+      ],
+      throwOnError: false
+    });"></script>
+</head>
+<body data-base="../">
+  <nav id="site-nav"></nav>
+
+  <main class="container">
+    <div class="post-header">
+      <div class="post-meta">May 2026 · By Michael M., Kubi M., Alex T., Drew V.</div>
+      <h1>Towards Multi-Party Block Construction</h1>
+      <div class="post-subtitle">Moving from one monolithic builder per block to multi-party blocks assembled from the contributions of multiple builders, widening blockspace allocation to their shared view.</div>
+    </div>
+
+    <div class="post-content">
+      <p><em>Co-authored by <a href="https://x.com/mostlyblocks">Michael M.</a>, <a href="https://x.com/kubimensah">Kubi M.</a>, <a href="https://x.com/alextes">Alex T.</a>, and <a href="https://x.com/DrewVdW">Drew V.</a></em></p>
+<p><em>Special thanks to <a href="https://x.com/jasnoodle">Jason V.</a>, <a href="https://x.com/gd_gattaca">George D</a>., <a href="https://x.com/soispoke">Thomas T.</a>, <a href="https://x.com/barnabemonnot">Barnabe M.</a>, <a href="https://x.com/drakefjustin">Justin D</a>., <a href="https://x.com/QuasarBuilder">Quasar Builder</a>, <a href="https://x.com/0xKuDeTa">Max W.</a>, and <a href="https://x.com/0xseiryu">Davide R.</a> for their comments and review.</em></p>
+<h3><strong>TL;DR</strong></h3>
+<ul>
+<li>Today&rsquo;s transaction pipeline has structural gaps that multiple teams and the community have worked to address.</li>
+<li>Building on workshops and conversations with teams across Ethereum, this post introduces multi-party block construction (MPBC), a fundamental redesign of how transactions find blocks and blocks get constructed.</li>
+<li>MPBC moves from one monolithic builder per block to multi-party blocks assembled from the contributions of multiple builders, widening blockspace allocation to their shared view.</li>
+<li>The design starts to address structural gaps, improves the robustness of Ethereum, and better matches the supply and demand of blockspace by allowing transactions unknown to or filtered by individual builders to find inclusion.</li>
+<li>This design is a first iteration. There are remaining gaps and open questions which we look forward to continuing to address with the teams that have already contributed and the wider Ethereum community.</li>
+</ul>
+<h2>Background</h2>
+<p>The Blockspace Forum is a gathering of industry participants with the purpose of improving the transaction journey on Ethereum. The most recent iteration was held in Cannes in April 2026, bringing together 32 teams, including block builders and relays accounting for more than 95% of all blocks constructed out of protocol. A detailed recap of the workshop <a href="/learn/events/cannes-2026.html">can be accessed here</a>.</p>
+<p>The goal of the Cannes workshop was to explore solutions to the structural gaps in the transaction pipeline identified at the preceding Buenos Aires iteration of the Forum. These gaps limit the economics, robustness, performance, and service compatibility of blockspace, imposing an opportunity cost on transaction originators, builders, infrastructure providers like relays, and validators. A detailed description of these challenges is <a href="https://ethresear.ch/t/an-observation-on-ethereum-s-blockspace-market/23669">available here</a>.</p>
+<p>This post introduces Multi-Party Block Construction (MPBC), which allows multiple parties to contribute to a single block. The design is strictly additive, extending blockspace allocation from a single builder’s limited view to the shared view of multiple builders. These multiple inclusion lanes allow transactions to find inclusion even when they are not available to or filtered by individual builders. This redesign aims to better match blockspace supply and demand, and starts to address the transaction pipeline’s structural gaps.</p>
+<p>MPBC is based on the Cannes and Buenos Aires workshops, and research and conversations across the Ethereum ecosystem. We expect the initial design to evolve in collaboration with the community, including the many parties that have already contributed to the Blockspace Forum and related research. We welcome feedback, and look forward to continuing the conversation here, and <a href="https://x.com/blockspaceforum">on X</a>.</p>
+<p>This post assumes familiarity with proposer-builder separation and the structural gaps in Ethereum’s current transaction pipeline.  A primer covering both is available <a href="/learn.html#intro-to-blockspace">here</a>.</p>
+<h3>The Current Solution Landscape</h3>
+<p>The Blockspace Forum workshops surveyed several active approaches to improving out-of-protocol block construction. These complement each other to address different originator preferences:</p>
+<ul>
+<li><a href="https://buildernet.org/">BuilderNet</a> (Flashbots, Beaverbuild, Nethermind) uses TEEs to reduce trust assumptions and enable shared order flow.</li>
+<li><a href="https://x.com/0x9212ce55/status/1970857263314448603">TOOL / Nuconstruct</a> targets sub-slot-driven early execution confirmations with an open collaborative environment.</li>
+<li><a href="https://docs.ethgas.com/">ETHGas</a> explores crypto-economically backed preconfirmations and futures to price inclusion risk and smooth fees. ETHGas also supports sub-blocks.</li>
+<li><a href="https://www.mev-commit.xyz/">mev-commit</a> develops preconfirmations and block positioning bids for inclusion<strong>.</strong></li>
+</ul>
+<p>MPBC aims to allow collaborative block building across these and other new solutions, and centralized block builders. This initial design expands on earlier proposals including <a href="https://ethresear.ch/t/relay-block-merging-boosting-value-censorship-resistance/22592">relay block merging</a>, <a href="https://ethresear.ch/t/relay-inclusion-lists/22218">relay inclusion lists</a>, and <a href="https://ethresear.ch/t/block-constraints-sharing-multi-relay-inclusion-lists-beyond/22752">multi-relay inclusion lists</a>.</p>
+<h3>Terminology</h3>
+<p>This document uses the following terms throughout.</p>
+<table>
+<thead>
+<tr>
+<th><strong>Term</strong></th>
+<th><strong>Explanation</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Proposer-Builder Separation (PBS)</td>
+<td>A mechanism adopted by the Ethereum community that preserves validator decentralization by outsourcing block construction to a specialized monolithic builder market.</td>
+</tr>
+<tr>
+<td>Multi-Party Block Construction (MPBC)</td>
+<td>A mechanism through which multiple parties contribute to blocks, creating independent inclusion paths and widening blockspace allocation to their shared view.</td>
+</tr>
+<tr>
+<td>Single-Party Block</td>
+<td>A block containing transactions contributed by only one monolithic builder.</td>
+</tr>
+<tr>
+<td>Multi-Party Block</td>
+<td>A block containing transactions contributed by more than one party.</td>
+</tr>
+<tr>
+<td>Base Block</td>
+<td>A highest-bid single-party block available to an operator, used as the starting point for multi-party block construction.</td>
+</tr>
+<tr>
+<td>Proposer (Validator)</td>
+<td>A stakeholder that stakes ETH and performs various operations to support the Ethereum network including attesting, producing, and signing Ethereum blocks.</td>
+</tr>
+<tr>
+<td>Originator</td>
+<td>A stakeholder that transacts and consumes Ethereum blockspace. Examples include sending a stablecoin, trading on a DEX, or an L2 submitting a blob.</td>
+</tr>
+<tr>
+<td>Builder</td>
+<td>A sophisticated party responsible for optimizing how transactions find blocks and blocks get constructed.</td>
+</tr>
+<tr>
+<td>Base Builder</td>
+<td>The builder that constructed the base block.</td>
+</tr>
+<tr>
+<td>Contributing Builders</td>
+<td>Builders that have contributed transactions to a multi-party block.</td>
+</tr>
+<tr>
+<td>Relay</td>
+<td>A required intermediary under PBS that escrows and relays the highest-bid block constructed by a single builder to the proposer.</td>
+</tr>
+<tr>
+<td>Operator</td>
+<td>A party that receives blocks and transactions from builders, combines eligible contributions into a multi-party block, and submits the highest-paying block to the proposer.</td>
+</tr>
+</tbody>
+</table>
+<h2>An Initial Design of Multi-Party Block Construction</h2>
+<p>MPBC extends PBS by allowing the highest-bid single-builder block to be improved with eligible contributions from other builders. The figures below compare today’s pipeline with the initial MPBC design.</p>
+<p><strong>The current PBS block construction pipeline</strong></p>
+<p><img alt="Schematic illustration of the current PBS block construction pipeline. " src="../assets/research/current-pbs-pipeline.png"></p>
+<p><em>Figure 1: Schematic illustration of the current PBS block construction pipeline.</em></p>
+<p>The current block construction pipeline connects the single builder that has submitted the highest-bid block to the proposer. Only transactions available to the winning builder can find inclusion through this single lane, including service transactions like proposer commitments.</p>
+<p><strong>The MPBC block construction pipeline</strong></p>
+<p><img alt="Schematic illustration of the MPBC pipeline" src="../assets/research/mpbc-pipeline.png"></p>
+<p><em>Figure 2: Schematic illustration of the MPBC pipeline.</em></p>
+<p>Under MPBC transactions and service commitments absent from the base block can still be included in the current slot. Each slot proceeds as follows:</p>
+<ol>
+<li>Originators submit transactions to builders and to the mempool.</li>
+<li>Builders construct single-party blocks from their local transaction view, submit those blocks to operators, and indicate which blocks and transactions are eligible for MPBC.</li>
+<li>Operators extend the highest-bid single-party block with non-conflicting transactions submitted by competing builders.</li>
+<li>Operators compare the multi-party block to the highest-bid single-party block at delivery time, and submit the overall highest-paying block to the proposer.</li>
+<li>The proposer signs the highest-paying block header received across all operators.</li>
+</ol>
+<p>MPBC is facilitated by multiple competing operators. Operators receive blocks and transactions from builders, identify eligible transactions absent from the base block, and append them to produce a higher-value multi-party block.</p>
+<p>Operator competition is initially focused on appending eligible transactions. Over time, it may extend to bid cancellations, payload propagation, and other services that improve block delivery and transaction inclusion. In the long term, this incentivizes operators to develop proprietary implementations including custom software and independent infrastructure, reducing the risk of correlated failures.</p>
+<p>Operators may also elect to deploy TEE-based instances or other verifiability mechanisms to reduce trust assumptions, allowing them to carry forward the privacy guarantees issued by TEE-based builders. This hybrid approach allows reconciliation of blocks built within and outside TEEs, combining verifiable privacy guarantees with MPBC.</p>
+<p><strong>The impact of MPBC</strong></p>
+<p>The following table summarizes the core properties and impact of both pipelines:</p>
+<table>
+<thead>
+<tr>
+<th><strong><em>Dimension</em></strong></th>
+<th><strong><em>Single-Party Block Construction</em></strong></th>
+<th><strong><em>Multi-Party Block Construction</em></strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Parties contributing to blocks</strong></td>
+<td>One winning builder.</td>
+<td>One base builder and any number of contributing builders.</td>
+</tr>
+<tr>
+<td><strong>Transactions eligible for inclusion</strong></td>
+<td>Transactions known to the winning builder.</td>
+<td>Transactions known to the base builder and contributing builders.</td>
+</tr>
+<tr>
+<td><strong>Inclusion Paths</strong></td>
+<td>Through the winning builder.</td>
+<td>Through the base builder and other contributors.</td>
+</tr>
+<tr>
+<td><strong>Support for Services</strong></td>
+<td>Proposer commitments and other services rely on opt-in by the winning builder for inclusion.</td>
+<td>Proposer commitments and other services can be included by the base builder or a contributing builder.</td>
+</tr>
+<tr>
+<td><strong>Performance and UX</strong></td>
+<td>Transactions not known to the winning builder spill-over to future slots. Users defensively overbid for inclusion.</td>
+<td>Transactions by any builder can find inclusion. Higher utilization and more predictable inclusion can reduce defensive overbidding. Better service support accommodates heterogeneous user needs, such as early inclusion confirmations.</td>
+</tr>
+</tbody>
+</table>
+<p>The design affects the actors in the block construction pipeline in the following ways:</p>
+<ul>
+<li>Originators see faster, cheaper, and more predictable inclusion through additional inclusion paths and higher blockspace utilization.</li>
+<li>Builders gain revenue for every block they contribute transactions to, lowering the barrier to entry for new builders.</li>
+<li>Operators earn revenue proportional to the value they generate by adding transactions from contributing builders to the base block.</li>
+<li>Proposers receive more valuable blocks and gain more credible support for proposer services, since multiple builders can contribute transactions.</li>
+<li>The Ethereum protocol benefits from higher censorship resistance and robustness through multiple inclusion channels, improved economics through higher blockspace utilization, and better support for services.</li>
+</ul>
+<p>MPBC is largely implemented by operators and builders, and requires no Ethereum protocol changes. Originators and proposers face no additional requirements unless they opt into services such as preconfirmations. The design does not rely on relays, as their core escrow role has been replaced by ePBS, which handles trusted handoff for single-party blocks in protocol. In contrast to relays, operators are not required and will only see usage when their services improve block value.</p>
+<p><strong>MPBC and the Structural Gaps of the PBS Pipeline</strong></p>
+<p>The following table summarizes MPBC’s impact on the economics, robustness, performance, and service-support problems of the single-party block construction pipeline:</p>
+<table>
+<thead>
+<tr>
+<th><strong><em>Dimension</em></strong></th>
+<th><strong><em>Single-Party Block Construction</em></strong></th>
+<th><strong><em>Multi-Party Block Construction</em></strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Economics</strong></td>
+<td>• Price discovery limited to a single builder&rsquo;s view of transactions.<br>• No compensation for key actors.<br>• No support for forward markets, leaving users exposed to gas volatility.</td>
+<td>• Price discovery over multiple builders’ views of transactions.<br>• Operator compensation proportional to value generation.<br>• Forward markets enabled through multiple inclusion paths for advance commitments.</td>
+</tr>
+<tr>
+<td><strong>Robustness</strong></td>
+<td>• Concentrated builder and relay set due to winner-take-all dynamics.<br>• Single builder holds discretion over inclusion.<br>• Limited proposer agency.</td>
+<td>• More diverse builder and operator set by allowing multiple parties to contribute to blocks.<br>• Multiple inclusion channels.<br>• Higher proposer agency due to support for proposer services.</td>
+</tr>
+<tr>
+<td><strong>Performance</strong></td>
+<td>• Transaction spill-over when capacity is constrained.<br>• Latency variance due to global auction.</td>
+<td>• Transactions not known to the base builder can be included instead of spilling over into subsequent slots.<br>• Coordinated auctions reduce latency variance.</td>
+</tr>
+<tr>
+<td><strong>Services</strong></td>
+<td>• Service support requires opt-in by the winning builder.<br>• High opportunity cost of forgoing opt-in by any competitive builder.</td>
+<td>• Service transactions can be included by the base builder, or by contributing builders.<br>•  Operators collect and share block constraints with builders.<br>• Small builders may specialize to support many service protocols.</td>
+</tr>
+</tbody>
+</table>
+<h3>MPBC Mechanism</h3>
+<p>Operators append eligible transactions from contributing builders to the highest-bid single-party block. At delivery time, they compare the resulting multi-party block against the latest highest-bid single-party block and deliver the higher-paying of the two to the proposer.</p>
+<p>The mechanism’s value scales with decentralization and the number of builders participating in it. The more fragmented transaction flow is among builders, the less encompassing the execution guarantees any individual builder can provide. If the base builder has not issued execution guarantees for some state, it can be accessed by merged transactions.</p>
+<p>The initial scope is limited to transactions that do not compete for contentious state, such as simple transfers or self-contained transaction bundles. This enables fast append-only merging while preserving the execution guarantees of the base block.</p>
+<p>Future iterations may expand this scope to include oracle updates, active enforcement of proposer services such as preconfirmations, additional operator coordination, and networking improvements.</p>
+<h4>Implementation</h4>
+<p>Operators extend the base block by appending missing service transactions such as proposer commitments, followed by other eligible transactions that increase block value, and transactions that distribute the newly added surplus. The mechanism unfolds in two stages, merging and delivery.</p>
+<p>The value unlocked per-block corresponds to the difference between the value of the multi-party block $B_{\text{MP}}$ and the value of the single-party block $B_{\text{SP}}$:</p>
+<p>$$
+\Delta V_{\text{block}}=\text{val}(B_{\text{MP}}) - \text{val}(B_{\text{SP}})
+$$</p>
+<p>Operators improve the value of the highest-bid single-party block, even if a combination of multiple other blocks could be more valuable. This prevents builders from spamming blocks containing subsets of the best block to improve their chances of inclusion.</p>
+<p>As multiple builders contribute transactions, the surplus available for distribution is calculated on a per-transaction basis. When several builders contribute the same transaction, it is attributed to the builder with the higher PBS auction bid, incentivizing competitive bidding. The exact value distribution rule is in active discussion and a topic for future research.</p>
+<p><strong>Merging Stage</strong></p>
+<p>The merging stage commences whenever an operator has received blocks and transactions eligible for merging. To avoid burdening originators with unexpected latency or inclusion, builders decide which blocks can be extended, and which transactions can be added to other blocks. These flags are submitted with the block’s metadata. Once a builder allows a block to be extended, transaction selection is performed by the operator according to the merging rules.</p>
+<p>Operators execute the following steps:</p>
+<ol>
+<li>Operators identify constraints from the complete set of constraints $C$ that are absent in the highest-bid single-party block $B_{\text{SP}}$:
+$$
+C_{\text{missing}} = \{\text{tx} \in C \mid \text{tx} \notin B_{\text{SP}}\}
+$$</li>
+<li>Operators attempt to merge these constraint transactions into $B_{\text{SP}}$. If this cannot be accomplished without changing the execution guarantees of $B_{\text{SP}}$, it is discarded, the second-highest-bid single-party block is designated $B_{\text{SP}}$, and the operator returns to step 1.</li>
+<li>For the highest-bid block $B_i$ of each opted-in builder $i$, the operator identifies the eligible transactions absent in $B_{\text{SP}}$:
+$$
+\text{Txns}_{i/\text{SP}} = \{ \text{tx} \in B_i \mid \text{tx} \notin B_{\text{SP}}\}
+$$</li>
+<li>The operator merges from $\text{Txns}_{i/\text{SP}}$ into $B_{\text{SP}}$, filtering out any transactions that would revert, creating the multi-party block $B_{\text{MP}}$.</li>
+<li>The operator calculates the surplus of the multi-party block $B_{\text{MP}}$ and appends any distribution transactions.</li>
+</ol>
+<p><strong>Delivery Stage</strong></p>
+<p>The delivery stage commences when an operator has finalized the multi-party block, which is then compared to the highest-bid single-party block available at delivery time. The highest-paying block is delivered to the proposer. This ensures that the mechanism improves on the bid floor set by the PBS auction.</p>
+<p>Operators execute the following steps:</p>
+<ol>
+<li>The operator checks for the presently highest-bid single-party block $\hat{B}_{\text{SP}}$.</li>
+<li>The operator verifies the improvement in blockspace utilization and block value by comparing $B_{\text{MP}}$ against the maximum value of $B_{\text{SP}}$ and $\hat{B}_{\text{SP}}$:</li>
+</ol>
+<p>$$
+\Delta V = \text{val}(B_{\text{MP}}) - \max(\text{val}(B_{\text{SP}}), \text{val}(\hat{B}_{\text{SP}}))
+$$</p>
+<ol>
+<li>If $\Delta V \geq 0$ the operator returns the header of $B_{\text{MP}}$ to the proposer and splits the surplus as per the value distribution rule; otherwise, it falls back to the highest-bid single-party block.</li>
+</ol>
+<h3>Networking and Coordination</h3>
+<p>The merging mechanism operates within the constraints of the information available to individual operators, and the expected propagation latency to the proposer. Operators can coordinate to improve block value without conceding their competitive edge by sharing information that increases the expected time horizon and accuracy of block construction. This is incentive compatible as operator compensation is expected to scale with the value generated.</p>
+<p>Initially, operators may share the following categories of information with each other:</p>
+<ul>
+<li>Constraints: Sharing block constraints like proposer commitments at the start of the slot lets multiple operators verify their inclusion and inform builders of block requirements.</li>
+<li>Geolocation: Coordinating around the proposer’s geography at the start of the slot allows conducting the block auction close to the proposer, reducing latency variance, and increasing the expected block value of geographically distant proposers.</li>
+<li>Payloads: Sharing execution payloads at the conclusion of the slot allows operators to combine their geographic coverage for more efficient propagation to attesters.</li>
+<li>Demotions: Sharing information on builder demotions throughout the slot allows operators to enforce a consistent view of which builders are temporarily excluded, reducing the need for builders to post separate collateral with each operator.</li>
+</ul>
+<h2>Outlook</h2>
+<p>The MPBC design described in this post builds on the discussion at the Buenos Aires and Cannes Blockspace Forum workshops, and will continue to evolve as teams implement and test the system in production. Feedback from all teams in the block construction pipeline is welcome and will be actively solicited as the design matures.</p>
+<p><strong>Open Questions and Future Directions</strong></p>
+<p>Specific open questions and limitations include:</p>
+<ul>
+<li>Value Distribution: The exact distribution mechanism for the new value contributed under MPBC, which should increase the revenue of all actors in the block construction pipeline.</li>
+<li>Trusted Operators: Ways to reduce trust assumptions through additional mechanisms including economic and consensus-based systems, or technical solutions like TEEs or FHE.</li>
+<li>Transaction Coverage: Extensions to the MPBC mechanism that allow builders to contribute additional categories of transactions to the base block, such as contentious transactions or oracle updates.</li>
+<li>Active Service Enforcement: The option for operators to append service transactions like proposer commitments even when builders have failed to include them.</li>
+<li>Technical improvements: Upgrades to technical infrastructure including network connectivity and peer-to-peer implementations.</li>
+</ul>
+<p>MPBC can be scaled through <a href="/learn/events/cannes-2026.html">sub-slots</a>, which allow for more frequent multi-builder contributions and fast execution preconfirmations. This improves blockspace allocation by clearing demand at higher cadence, and robustness by giving each transaction multiple inclusion attempts within a single slot. Sub-slots were discussed at the Cannes Blockspace Forum workshop and are a direction for more detailed exploration.</p>
+<p>The initial design presented in this post is a first step towards multi-party block construction, building on the discussions and contributions of teams across the Ethereum ecosystem. Forthcoming publications will complement this introductory design with technical specifications, and address gaps like value distribution and trust assumptions. The Blockspace Forum will return later this year, and we look forward to seeing everybody there.</p>
+    </div>
+  </main>
+
+  <footer id="site-footer"></footer>
+
+  <script src="../config.js"></script>
+  <script src="../js/main.js"></script>
+</body>
+</html>

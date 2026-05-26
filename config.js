@@ -12,8 +12,8 @@ const SITE_CONFIG = {
 
   banner: {
     active: true,
-    text: "New: Cannes 2026 Workshop Recap",
-    link: "learn/events/cannes-2026.html",
+    text: "New Research: Towards Multi-Party Block Construction",
+    link: "research/towards-mpbc.html",
   },
 
   links: {
@@ -27,6 +27,14 @@ const SITE_CONFIG = {
   },
 
   research: [
+    {
+      title: "Towards Multi-Party Block Construction",
+      authors: "Michael M., Kubi M., Alex T., Drew V.",
+      date: "May 2026",
+      summary: "Moving from one monolithic builder per block to multi-party blocks assembled from the contributions of multiple builders, widening blockspace allocation to their shared view.",
+      url: "research/towards-mpbc.html",
+      featured: true,
+    },
     {
       title: "An Observation on Ethereum's Blockspace Market",
       authors: "Kubi M., Alex T., Kevin L., Justin D.",
@@ -58,7 +66,7 @@ const SITE_CONFIG = {
       summary: "A mechanism for relays to enforce transaction inclusion, improving censorship resistance without protocol changes.",
       url: "https://ethresear.ch/t/relay-inclusion-lists/22218",
       featured: true
-    },
+    }
   ],
 
   tooling: {

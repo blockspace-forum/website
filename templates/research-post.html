@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{title}} — Blockspace Forum</title>
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="{{title}} — Blockspace Forum">
+  <meta property="og:description" content="{{subtitle}}">
+  <meta property="og:image" content="{{site_url}}/assets/og-image.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@blockspaceforum">
+  <meta name="twitter:title" content="{{title}} — Blockspace Forum">
+  <meta name="twitter:description" content="{{subtitle}}">
+  <meta name="twitter:image" content="{{site_url}}/assets/og-image.png">
+  <meta name="description" content="{{subtitle}}">
+  <link rel="canonical" href="{{site_url}}/research/{{slug}}.html">
+  <link rel="icon" href="{{base}}assets/favicon.ico">
+  <link rel="apple-touch-icon" href="{{base}}assets/apple-touch-icon.png">
+  <link rel="stylesheet" href="{{base}}css/style.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"
+    onload="renderMathInElement(document.querySelector('.post-content'), {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$', right: '$', display: false}
+      ],
+      throwOnError: false
+    });"></script>
+</head>
+<body data-base="{{base}}">
+  <nav id="site-nav"></nav>
+
+  <main class="container">
+    <div class="post-header">
+      <div class="post-meta">{{date}}{{authors_html}}</div>
+      <h1>{{title}}</h1>
+      <div class="post-subtitle">{{subtitle}}</div>
+    </div>
+
+    <div class="post-content">
+      {{content}}
+    </div>
+  </main>
+
+  <footer id="site-footer"></footer>
+
+  <script src="{{base}}config.js"></script>
+  <script src="{{base}}js/main.js"></script>
+</body>
+</html>
