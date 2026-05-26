@@ -106,11 +106,11 @@ The following table summarizes the core properties and impact of both pipelines:
 
 The design affects the actors in the block construction pipeline in the following ways: 
 
-- **Originators** see faster, cheaper, and more predictable inclusion through additional inclusion paths and higher blockspace utilization.
-- **Builders** gain revenue for every block they contribute transactions to, lowering the barrier to entry for new builders.
-- **Operators** earn revenue proportional to the value they generate by adding transactions from contributing builders to the base block.
-- **Proposers** receive more valuable blocks and gain more credible support for proposer services, since multiple builders can contribute transactions.
-- **The Ethereum protocol** benefits from higher censorship resistance and robustness through multiple inclusion channels, improved economics through higher blockspace utilization, and better support for services.
+- Originators see faster, cheaper, and more predictable inclusion through additional inclusion paths and higher blockspace utilization.
+- Builders gain revenue for every block they contribute transactions to, lowering the barrier to entry for new builders.
+- Operators earn revenue proportional to the value they generate by adding transactions from contributing builders to the base block.
+- Proposers receive more valuable blocks and gain more credible support for proposer services, since multiple builders can contribute transactions.
+- The Ethereum protocol benefits from higher censorship resistance and robustness through multiple inclusion channels, improved economics through higher blockspace utilization, and better support for services.
 
 MPBC is largely implemented by operators and builders, and requires no Ethereum protocol changes. Originators and proposers face no additional requirements unless they opt into services such as preconfirmations. The design does not rely on relays, as their core escrow role has been replaced by ePBS, which handles trusted handoff for single-party blocks in protocol. In contrast to relays, operators are not required and will only see usage when their services improve block value.
 
@@ -201,10 +201,10 @@ The merging mechanism operates within the constraints of the information availab
 
 Initially, operators may share the following categories of information with each other: 
 
-- **Constraints:** Sharing block constraints like proposer commitments at the start of the slot lets multiple operators verify their inclusion and inform builders of block requirements.
-- **Geolocation:** Coordinating around the ****proposer’s geography at the start of the slot allows conducting the block auction close to the proposer, reducing latency variance, and increasing the expected block value of geographically distant proposers.
-- **Payloads:** Sharing execution payloads at the conclusion of the slot allows operators to combine their geographic coverage for more efficient propagation to attesters.
-- **Demotions**: Sharing information on builder demotions throughout the slot allows operators to enforce a consistent view of which builders are temporarily excluded, reducing the need for builders to post separate collateral with each operator.
+- Constraints: Sharing block constraints like proposer commitments at the start of the slot lets multiple operators verify their inclusion and inform builders of block requirements.
+- Geolocation: Coordinating around the proposer’s geography at the start of the slot allows conducting the block auction close to the proposer, reducing latency variance, and increasing the expected block value of geographically distant proposers.
+- Payloads: Sharing execution payloads at the conclusion of the slot allows operators to combine their geographic coverage for more efficient propagation to attesters.
+- Demotions: Sharing information on builder demotions throughout the slot allows operators to enforce a consistent view of which builders are temporarily excluded, reducing the need for builders to post separate collateral with each operator.
 
 ## Outlook
 
@@ -214,11 +214,11 @@ The MPBC design described in this post builds on the discussion at the Buenos Ai
 
 Specific open questions and limitations include: 
 
-- **Value Distribution:** The exact distribution mechanism for the new value contributed under MPBC, which should increase the revenue of all actors in the block construction pipeline.
-- **Trusted Operators:** Ways to reduce trust assumptions through additional mechanisms including economic and consensus-based systems, or technical solutions like TEEs or FHE.
-- **Transaction Coverage:** Extensions to the MPBC mechanism that allow builders to contribute additional categories of transactions to the base block, such as contentious transactions or oracle updates.
-- **Active Service Enforcement:** The option for operators to append service transactions like proposer commitments even when builders have failed to include them.
-- **Technical improvements:** Upgrades to technical infrastructure including network connectivity and peer-to-peer implementations.
+- Value Distribution: The exact distribution mechanism for the new value contributed under MPBC, which should increase the revenue of all actors in the block construction pipeline.
+- Trusted Operators: Ways to reduce trust assumptions through additional mechanisms including economic and consensus-based systems, or technical solutions like TEEs or FHE.
+- Transaction Coverage: Extensions to the MPBC mechanism that allow builders to contribute additional categories of transactions to the base block, such as contentious transactions or oracle updates.
+- Active Service Enforcement: The option for operators to append service transactions like proposer commitments even when builders have failed to include them.
+- Technical improvements: Upgrades to technical infrastructure including network connectivity and peer-to-peer implementations.
 
 MPBC can be scaled through [sub-slots](/learn/events/cannes-2026.html), which allow for more frequent multi-builder contributions and fast execution preconfirmations. This improves blockspace allocation by clearing demand at higher cadence, and robustness by giving each transaction multiple inclusion attempts within a single slot. Sub-slots were discussed at the Cannes Blockspace Forum workshop and are a direction for more detailed exploration.
 

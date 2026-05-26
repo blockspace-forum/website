@@ -185,11 +185,11 @@
 </table>
 <p>The design affects the actors in the block construction pipeline in the following ways:</p>
 <ul>
-<li><strong>Originators</strong> see faster, cheaper, and more predictable inclusion through additional inclusion paths and higher blockspace utilization.</li>
-<li><strong>Builders</strong> gain revenue for every block they contribute transactions to, lowering the barrier to entry for new builders.</li>
-<li><strong>Operators</strong> earn revenue proportional to the value they generate by adding transactions from contributing builders to the base block.</li>
-<li><strong>Proposers</strong> receive more valuable blocks and gain more credible support for proposer services, since multiple builders can contribute transactions.</li>
-<li><strong>The Ethereum protocol</strong> benefits from higher censorship resistance and robustness through multiple inclusion channels, improved economics through higher blockspace utilization, and better support for services.</li>
+<li>Originators see faster, cheaper, and more predictable inclusion through additional inclusion paths and higher blockspace utilization.</li>
+<li>Builders gain revenue for every block they contribute transactions to, lowering the barrier to entry for new builders.</li>
+<li>Operators earn revenue proportional to the value they generate by adding transactions from contributing builders to the base block.</li>
+<li>Proposers receive more valuable blocks and gain more credible support for proposer services, since multiple builders can contribute transactions.</li>
+<li>The Ethereum protocol benefits from higher censorship resistance and robustness through multiple inclusion channels, improved economics through higher blockspace utilization, and better support for services.</li>
 </ul>
 <p>MPBC is largely implemented by operators and builders, and requires no Ethereum protocol changes. Originators and proposers face no additional requirements unless they opt into services such as preconfirmations. The design does not rely on relays, as their core escrow role has been replaced by ePBS, which handles trusted handoff for single-party blocks in protocol. In contrast to relays, operators are not required and will only see usage when their services improve block value.</p>
 <p><strong>MPBC and the Structural Gaps of the PBS Pipeline</strong></p>
@@ -271,21 +271,21 @@ $$</p>
 <p>The merging mechanism operates within the constraints of the information available to individual operators, and the expected propagation latency to the proposer. Operators can coordinate to improve block value without conceding their competitive edge by sharing information that increases the expected time horizon and accuracy of block construction. This is incentive compatible as operator compensation is expected to scale with the value generated.</p>
 <p>Initially, operators may share the following categories of information with each other:</p>
 <ul>
-<li><strong>Constraints:</strong> Sharing block constraints like proposer commitments at the start of the slot lets multiple operators verify their inclusion and inform builders of block requirements.</li>
-<li><strong>Geolocation:</strong> Coordinating around the ****proposer’s geography at the start of the slot allows conducting the block auction close to the proposer, reducing latency variance, and increasing the expected block value of geographically distant proposers.</li>
-<li><strong>Payloads:</strong> Sharing execution payloads at the conclusion of the slot allows operators to combine their geographic coverage for more efficient propagation to attesters.</li>
-<li><strong>Demotions</strong>: Sharing information on builder demotions throughout the slot allows operators to enforce a consistent view of which builders are temporarily excluded, reducing the need for builders to post separate collateral with each operator.</li>
+<li>Constraints: Sharing block constraints like proposer commitments at the start of the slot lets multiple operators verify their inclusion and inform builders of block requirements.</li>
+<li>Geolocation: Coordinating around the proposer’s geography at the start of the slot allows conducting the block auction close to the proposer, reducing latency variance, and increasing the expected block value of geographically distant proposers.</li>
+<li>Payloads: Sharing execution payloads at the conclusion of the slot allows operators to combine their geographic coverage for more efficient propagation to attesters.</li>
+<li>Demotions: Sharing information on builder demotions throughout the slot allows operators to enforce a consistent view of which builders are temporarily excluded, reducing the need for builders to post separate collateral with each operator.</li>
 </ul>
 <h2>Outlook</h2>
 <p>The MPBC design described in this post builds on the discussion at the Buenos Aires and Cannes Blockspace Forum workshops, and will continue to evolve as teams implement and test the system in production. Feedback from all teams in the block construction pipeline is welcome and will be actively solicited as the design matures.</p>
 <p><strong>Open Questions and Future Directions</strong></p>
 <p>Specific open questions and limitations include:</p>
 <ul>
-<li><strong>Value Distribution:</strong> The exact distribution mechanism for the new value contributed under MPBC, which should increase the revenue of all actors in the block construction pipeline.</li>
-<li><strong>Trusted Operators:</strong> Ways to reduce trust assumptions through additional mechanisms including economic and consensus-based systems, or technical solutions like TEEs or FHE.</li>
-<li><strong>Transaction Coverage:</strong> Extensions to the MPBC mechanism that allow builders to contribute additional categories of transactions to the base block, such as contentious transactions or oracle updates.</li>
-<li><strong>Active Service Enforcement:</strong> The option for operators to append service transactions like proposer commitments even when builders have failed to include them.</li>
-<li><strong>Technical improvements:</strong> Upgrades to technical infrastructure including network connectivity and peer-to-peer implementations.</li>
+<li>Value Distribution: The exact distribution mechanism for the new value contributed under MPBC, which should increase the revenue of all actors in the block construction pipeline.</li>
+<li>Trusted Operators: Ways to reduce trust assumptions through additional mechanisms including economic and consensus-based systems, or technical solutions like TEEs or FHE.</li>
+<li>Transaction Coverage: Extensions to the MPBC mechanism that allow builders to contribute additional categories of transactions to the base block, such as contentious transactions or oracle updates.</li>
+<li>Active Service Enforcement: The option for operators to append service transactions like proposer commitments even when builders have failed to include them.</li>
+<li>Technical improvements: Upgrades to technical infrastructure including network connectivity and peer-to-peer implementations.</li>
 </ul>
 <p>MPBC can be scaled through <a href="/learn/events/cannes-2026.html">sub-slots</a>, which allow for more frequent multi-builder contributions and fast execution preconfirmations. This improves blockspace allocation by clearing demand at higher cadence, and robustness by giving each transaction multiple inclusion attempts within a single slot. Sub-slots were discussed at the Cannes Blockspace Forum workshop and are a direction for more detailed exploration.</p>
 <p>The initial design presented in this post is a first step towards multi-party block construction, building on the discussions and contributions of teams across the Ethereum ecosystem. Forthcoming publications will complement this introductory design with technical specifications, and address gaps like value distribution and trust assumptions. The Blockspace Forum will return later this year, and we look forward to seeing everybody there.</p>
