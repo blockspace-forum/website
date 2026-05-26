@@ -694,6 +694,44 @@ nav .container {
   margin-top: 0.75rem;
 }
 
+.post-content table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 2rem 0;
+  font-size: 0.85rem;
+  line-height: 1.5;
+}
+
+.post-content th,
+.post-content td {
+  padding: 0.65rem 0.85rem;
+  text-align: left;
+  vertical-align: top;
+  border: 1px solid var(--border);
+}
+
+.post-content th {
+  background: var(--bg-card);
+  color: var(--text-primary);
+  font-weight: 600;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.post-content td {
+  color: var(--text-secondary);
+}
+
+.post-content td strong {
+  color: var(--text-primary);
+}
+
+.post-content tr:hover {
+  background: var(--bg-card-hover);
+}
+
 /* ---- Stat Callouts ---- */
 
 .stat-callout {

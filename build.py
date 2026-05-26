@@ -101,6 +101,36 @@ def add_image_captions(html):
     )
     return html
 
+
+def join_multiline_table_cells(body):
+    """Pre-process markdown table blocks: join lines not starting with | into the
+    preceding table row. Converts trailing 2-space + newline to <br> so multi-
+    line cell content (bullet lists) stays in the same cell."""
+    lines = body.split('\n')
+    result = []
+    in_table = False
+    for line in lines:
+        stripped = line.rstrip()
+        if in_table:
+            if not stripped:
+                in_table = False
+                result.append(line)
+            elif stripped.startswith('|'):
+                result.append(line)
+            else:
+                # Continuation of previous cell — join to last line
+                if result:
+                    # Convert the trailing line break to <br> for visual breaks
+                    result[-1] = result[-1].rstrip() + '<br>' + line
+                else:
+                    result.append(line)
+        else:
+            if stripped.startswith('|') and '---' not in stripped:
+                in_table = True
+            result.append(line)
+    return '\n'.join(result)
+
+
 # ---- Build Posts ---- #
 
 def build_posts():
@@ -563,6 +593,9 @@ def build_research():
 
         # Clean up leading whitespace
         body = '\n'.join(line.strip() for line in body.split('\n'))
+
+        # Join multi-line table cells before markdown conversion
+        body = join_multiline_table_cells(body)
 
         # Convert to HTML
         content_html = markdown.markdown(

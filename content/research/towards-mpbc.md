@@ -65,7 +65,7 @@ MPBC extends PBS by allowing the highest-bid single-builder block to be improved
 
 **The current PBS block construction pipeline**
 
-![Schematic illustration of the current PBS block construction pipeline. ](../../../assets/research/current-pbs-pipeline.png)
+![Schematic illustration of the current PBS block construction pipeline. ](../../assets/research/current-pbs-pipeline.png)
 
 
 *Figure 1: Schematic illustration of the current PBS block construction pipeline.* 
@@ -74,7 +74,7 @@ The current block construction pipeline connects the single builder that has sub
 
 **The MPBC block construction pipeline**
 
-![Schematic illustration of the MPBC pipeline](../../../assets/research/mpbc-pipeline.png)
+![Schematic illustration of the MPBC pipeline](../../assets/research/mpbc-pipeline.png)
 
 *Figure 2: Schematic illustration of the MPBC pipeline.* 
 
@@ -120,8 +120,7 @@ The following table summarizes MPBC’s impact on the economics, robustness, per
 
 | ***Dimension*** | ***Single-Party Block Construction*** | ***Multi-Party Block Construction*** |
 | --- | --- | --- |
-| **Economics** | • Price discovery limited to a single builder's view of transactions.  
-• No compensation for key actors.  
+| **Economics** | • Price discovery limited to a single builder's view of transactions.  • No compensation for key actors.  
 • No support for forward markets, leaving users exposed to gas volatility. | • Price discovery over multiple builders’ views of transactions.   
 • Operator compensation proportional to value generation.   
 • Forward markets enabled through multiple inclusion paths for advance commitments. |
@@ -224,6 +223,6 @@ Specific open questions and limitations include:
 - **Active Service Enforcement:** The option for operators to append service transactions like proposer commitments even when builders have failed to include them.
 - **Technical improvements:** Upgrades to technical infrastructure including network connectivity and peer-to-peer implementations.
 
-MPBC can be scaled through [sub-slots](https://blockspace.forum/learn/events/cannes-2026.html), which allow for more frequent multi-builder contributions and fast execution preconfirmations. This improves blockspace allocation by clearing demand at higher cadence, and robustness by giving each transaction multiple inclusion attempts within a single slot. Sub-slots were discussed at the Cannes Blockspace Forum workshop and are a direction for more detailed exploration.
+MPBC can be scaled through [sub-slots](/learn/events/cannes-2026.html), which allow for more frequent multi-builder contributions and fast execution preconfirmations. This improves blockspace allocation by clearing demand at higher cadence, and robustness by giving each transaction multiple inclusion attempts within a single slot. Sub-slots were discussed at the Cannes Blockspace Forum workshop and are a direction for more detailed exploration.
 
 The initial design presented in this post is a first step towards multi-party block construction, building on the discussions and contributions of teams across the Ethereum ecosystem. Forthcoming publications will complement this introductory design with technical specifications, and address gaps like value distribution and trust assumptions. The Blockspace Forum will return later this year, and we look forward to seeing everybody there.
