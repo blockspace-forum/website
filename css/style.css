@@ -21,6 +21,7 @@
   --max-width-wide: 1400px;
   --font-body: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   --font-mono: 'JetBrains Mono', 'SF Mono', 'Fira Code', Menlo, monospace;
+  --content-scale: 1.25;
 }
 
 * {
@@ -569,23 +570,24 @@ nav .container {
 /* ---- Post Content ---- */
 
 .post-content {
+  font-size: calc(1rem * var(--content-scale));
   padding-bottom: 3rem;
 }
 
 .post-content p {
   margin-bottom: 1.4rem;
   color: var(--text-secondary);
-  font-size: 0.95rem;
+  font-size: 0.95em;
 }
 
 .post-content > p:first-child,
 .post-content > .toc + p {
   color: var(--text-primary);
-  font-size: 1rem;
+  font-size: 1em;
 }
 
 .post-content h2 {
-  font-size: 1.15rem;
+  font-size: 1.15em;
   font-weight: 700;
   margin: 3rem 0 1rem;
   color: var(--text-primary);
@@ -593,7 +595,7 @@ nav .container {
 }
 
 .post-content h3 {
-  font-size: 1rem;
+  font-size: 1em;
   font-weight: 600;
   margin: 2.25rem 0 0.75rem;
   color: var(--text-primary);
@@ -634,7 +636,7 @@ nav .container {
 
 .post-content figure figcaption {
   font-family: var(--font-mono);
-  font-size: 0.18rem;
+  font-size: 0.68em;
   color: var(--text-secondary);
   margin-top: 0.25rem;
   line-height: 1.5;
@@ -644,7 +646,7 @@ nav .container {
 .post-content img {
   width: 100%;
   border-radius: 4px;
-  margin: 0.0rem 0 0.0rem;
+  margin: 0.35rem 0 0.15rem;
   border: 1px solid var(--border);
   box-shadow: 0 4px 24px rgba(0, 0, 0, 0.5);
   transition: border-color 0.3s;
@@ -672,7 +674,7 @@ nav .container {
   margin-bottom: 1.4rem;
   padding-left: 1.25rem;
   color: var(--text-secondary);
-  font-size: 0.95rem;
+  font-size: 0.95em;
 }
 
 .post-content li {
@@ -690,7 +692,7 @@ nav .container {
 
 .post-content blockquote p {
   color: var(--text-secondary);
-  font-size: 0.9rem;
+  font-size: 0.9em;
   margin-bottom: 0;
 }
 
@@ -702,7 +704,7 @@ nav .container {
   width: 100%;
   border-collapse: collapse;
   margin: 2rem 0;
-  font-size: 0.85rem;
+  font-size: 0.85em;
   line-height: 1.5;
 }
 
@@ -719,7 +721,7 @@ nav .container {
   color: var(--text-primary);
   font-weight: 600;
   font-family: var(--font-mono);
-  font-size: 0.78rem;
+  font-size: 0.78em;
   text-transform: uppercase;
   letter-spacing: 0.04em;
 }
@@ -778,7 +780,7 @@ nav .container {
 
 .toc-label {
   font-family: var(--font-mono);
-  font-size: 0.62rem;
+  font-size: 0.62em;
   font-weight: 600;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -801,7 +803,7 @@ nav .container {
 .toc li::before {
   content: counter(toc, decimal-leading-zero);
   font-family: var(--font-mono);
-  font-size: 0.62rem;
+  font-size: 0.62em;
   color: var(--text-muted);
   margin-right: 0.75rem;
 }
@@ -819,7 +821,7 @@ nav .container {
 .toc .toc-nested li::before {
   content: '—';
   font-family: var(--font-mono);
-  font-size: 0.62rem;
+  font-size: 0.62em;
   color: var(--text-muted);
   margin-right: 0.65rem;
 }
@@ -827,7 +829,7 @@ nav .container {
 .toc a {
   color: var(--text-secondary);
   text-decoration: none;
-  font-size: 0.82rem;
+  font-size: 0.82em;
   font-weight: 500;
   transition: color 0.2s;
 }
@@ -1064,21 +1066,21 @@ footer a:hover {
   }
 
   .post-content p {
-    font-size: 1rem;
+    font-size: 1em;
     line-height: 1.8;
   }
 
   .post-content > p:first-child,
   .post-content > .toc + p {
-    font-size: 1.05rem;
+    font-size: 1.05em;
   }
 
   .post-content h2 {
-    font-size: 1.25rem;
+    font-size: 1.25em;
   }
 
   .post-content h3 {
-    font-size: 1.05rem;
+    font-size: 1.05em;
   }
 
   .stat-callout .stat-number {
