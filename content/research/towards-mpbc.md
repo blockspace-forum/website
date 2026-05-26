@@ -65,7 +65,7 @@ MPBC extends PBS by allowing the highest-bid single-builder block to be improved
 
 **The current PBS block construction pipeline**
 
-![Schematic illustration of the current PBS block construction pipeline. ](../../assets/research/current-pbs-pipeline.png)
+![Schematic illustration of the current PBS block construction pipeline. ](../assets/research/current-pbs-pipeline.png)
 
 
 *Figure 1: Schematic illustration of the current PBS block construction pipeline.* 
@@ -74,7 +74,7 @@ The current block construction pipeline connects the single builder that has sub
 
 **The MPBC block construction pipeline**
 
-![Schematic illustration of the MPBC pipeline](../../assets/research/mpbc-pipeline.png)
+![Schematic illustration of the MPBC pipeline](../assets/research/mpbc-pipeline.png)
 
 *Figure 2: Schematic illustration of the MPBC pipeline.* 
 
