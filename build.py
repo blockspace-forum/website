@@ -32,6 +32,8 @@ POSTS_DIR = SITE_DIR / "learn" / "series"
 TEMPLATES_DIR = SITE_DIR / "templates"
 LEARN_CONTENT_DIR = SITE_DIR / "content" / "learn"
 LEARN_DIR = SITE_DIR / "learn"
+RESEARCH_CONTENT_DIR = SITE_DIR / "content" / "research"
+RESEARCH_DIR = SITE_DIR / "research"
 
 # ---- Frontmatter Parser ---- #
 
@@ -191,8 +193,8 @@ def build_posts():
 
 # ---- Build Config ---- #
 
-def build_config(posts_meta):
-    """Generate config.js from post metadata and existing link config."""
+def build_config(posts_meta, research_pages):
+    """Generate config.js from post metadata, research pages, and existing link config."""
 
     # Read banner config
     banner_path = SITE_DIR / "content" / "_banner.yaml"
@@ -218,6 +220,19 @@ def build_config(posts_meta):
       source: "{p['source']}",
     }}''' for p in posts_meta
     ])
+
+    # Research entries from content/research/*.md
+    research_entries = []
+    for r in research_pages:
+        research_entries.append(f'''    {{
+      title: "{r['title']}",
+      authors: "{r['authors']}",
+      date: "{r['date']}",
+      summary: "{r['subtitle']}",
+      url: "research/{r['slug']}.html",
+      featured: true
+    }}''')
+    research_js = ",\n".join(research_entries)
 
     links = {
         "twitter": existing_links.get("twitter", "https://x.com/blockspaceforum"),
@@ -291,6 +306,7 @@ const SITE_CONFIG = {{
       url: "https://ethresear.ch/t/relay-inclusion-lists/22218",
       featured: true
     }},
+{research_js}
   ],
 
   tooling: {{
@@ -515,8 +531,74 @@ def build_learn():
 
 # ---- Build Pages ---- #
 
+def build_research():
+    """Read content/research/*.md, generate research/*.html, return page metadata."""
+    md_files = sorted(RESEARCH_CONTENT_DIR.glob("*.md"))
+    if not md_files:
+        return []
+
+    template = load_template("research-post.html")
+    pages = []
+
+    RESEARCH_DIR.mkdir(exist_ok=True)
+
+    for md_file in md_files:
+        text = md_file.read_text()
+        meta, body = parse_frontmatter(text)
+
+        slug = md_file.stem
+
+        # Extract title from frontmatter, or first h1, or filename
+        title = meta.get("title", "")
+        if not title:
+            h1_match = re.search(r'^#\s+(.+)$', body, re.MULTILINE)
+            title = h1_match.group(1) if h1_match else slug.replace("-", " ").title()
+
+        subtitle = meta.get("subtitle", "")
+        authors = meta.get("authors", "")
+        date = str(meta.get("date", ""))
+
+        # Build authors line if present
+        authors_html = f" · By {authors}" if authors else ""
+
+        # Clean up leading whitespace
+        body = '\n'.join(line.strip() for line in body.split('\n'))
+
+        # Convert to HTML
+        content_html = markdown.markdown(
+            body,
+            extensions=['extra', 'smarty'],
+            output_format='html5'
+        )
+
+        html = render_template(template, {
+            "title": title,
+            "subtitle": subtitle,
+            "date": date,
+            "authors_html": authors_html,
+            "slug": slug,
+            "content": content_html,
+            "base": "../",
+            "site_url": SITE_URL,
+        })
+
+        out_path = RESEARCH_DIR / f"{slug}.html"
+        out_path.write_text(html)
+        print(f"  Built research/{slug}.html")
+
+        pages.append({
+            "slug": slug,
+            "title": title,
+            "authors": authors,
+            "date": date,
+            "subtitle": subtitle,
+        })
+
+    return pages
+
+
 def build_pages():
-    """Generate index.html and blog.html from templates."""
+    """Generate static pages from templates."""
     for page in ["index.html", "blog.html", "events.html", "research.html", "learn.html"]:
         template = load_template(page)
         (SITE_DIR / page).write_text(template.replace("{{site_url}}", SITE_URL))
@@ -525,17 +607,20 @@ def build_pages():
 # ---- Clean ---- #
 
 def clean():
-    """Remove generated post HTML files."""
+    """Remove generated post and research HTML files."""
     for f in POSTS_DIR.glob("*.html"):
         f.unlink()
         print(f"  Removed learn/series/{f.name}")
+    for f in RESEARCH_DIR.glob("*.html"):
+        f.unlink()
+        print(f"  Removed research/{f.name}")
 
 
 # ---- Build Sitemap ---- #
 
 SITE_URL = "https://blockspace.forum"
 
-def build_sitemap(posts_meta, learn_pages):
+def build_sitemap(posts_meta, learn_pages, research_pages):
     """Generate sitemap.xml from all pages."""
     from datetime import date as d
     today = d.today().isoformat()
@@ -566,6 +651,14 @@ def build_sitemap(posts_meta, learn_pages):
     <priority>0.9</priority>
   </url>""")
 
+    # Research pages
+    for page in research_pages:
+        urls.append(f"""  <url>
+    <loc>{SITE_URL}/research/{page['slug']}.html</loc>
+    <lastmod>{today}</lastmod>
+    <priority>0.8</priority>
+  </url>""")
+
     # Posts
     for post in posts_meta:
         date = post.get("date", today)
@@ -592,11 +685,12 @@ def main():
 
     print("Building...")
     posts_meta = build_posts()
-    build_config(posts_meta)
+    research_pages = build_research()
+    build_config(posts_meta, research_pages)
     learn_pages = build_learn()
     build_pages()
-    build_sitemap(posts_meta, learn_pages)
-    print(f"\nDone. {len(posts_meta)} posts, {len(learn_pages)} learn pages built.")
+    build_sitemap(posts_meta, learn_pages, research_pages)
+    print(f"\nDone. {len(posts_meta)} posts, {len(learn_pages)} learn pages, {len(research_pages)} research pages built.")
 
 if __name__ == "__main__":
     main()
