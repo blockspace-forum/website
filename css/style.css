@@ -17,7 +17,8 @@
   --border: #161616;
   --border-light: #222222;
   --accent: #e8e8e8;
-  --max-width: 720px;
+  --content-width: 840px;
+  --max-width: var(--content-width);
   --max-width-wide: 1400px;
   --font-body: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   --font-mono: 'JetBrains Mono', 'SF Mono', 'Fira Code', Menlo, monospace;
@@ -991,7 +992,7 @@ footer a:hover {
 
 @media (min-width: 1024px) {
   :root {
-    --max-width: 760px;
+    --max-width: calc(var(--content-width) * 1.055);
     --max-width-wide: 1280px;
   }
 
@@ -1114,7 +1115,7 @@ footer a:hover {
 
 @media (min-width: 1440px) {
   :root {
-    --max-width: 800px;
+    --max-width: calc(var(--content-width) * 1.111);
     --max-width-wide: 1400px;
   }
 
@@ -1948,7 +1949,7 @@ footer a:hover {
 
 /* Narrow container for learn pages */
 .container--narrow {
-  max-width: 720px;
+  max-width: var(--max-width);
 }
 
 /* ---- Thread Cards (homepage learning section) ---- */
