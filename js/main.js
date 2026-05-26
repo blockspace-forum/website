@@ -189,8 +189,10 @@ function renderResearchList(containerId, featured) {
     if (item.url) {
       el = document.createElement('a');
       el.href = item.url;
-      el.target = '_blank';
-      el.rel = 'noopener';
+      if (item.url.startsWith('http')) {
+        el.target = '_blank';
+        el.rel = 'noopener';
+      }
       el.className = 'research-card card-link';
     } else {
       el = document.createElement('div');
