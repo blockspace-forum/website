@@ -16,6 +16,7 @@ subtitle: "Moving from one monolithic builder per block to multi-party blocks as
 - MPBC moves from one monolithic builder per block to multi-party blocks assembled from the contributions of multiple builders, widening blockspace allocation to their shared view.
 - The design starts to address structural gaps, improves the robustness of Ethereum, and better matches the supply and demand of blockspace by allowing transactions unknown to or filtered by individual builders to find inclusion.
 - This design is a first iteration. There are remaining gaps and open questions which we look forward to continuing to address with the teams that have already contributed and the wider Ethereum community.
+- See the [ethresearch post](https://ethresear.ch/t/building-towards-multi-party-block-construction/24975)
 
 ## Background
 
@@ -223,3 +224,5 @@ Specific open questions and limitations include:
 MPBC can be scaled through [sub-slots](/learn/events/cannes-2026.html), which allow for more frequent multi-builder contributions and fast execution preconfirmations. This improves blockspace allocation by clearing demand at higher cadence, and robustness by giving each transaction multiple inclusion attempts within a single slot. Sub-slots were discussed at the Cannes Blockspace Forum workshop and are a direction for more detailed exploration.
 
 The initial design presented in this post is a first step towards multi-party block construction, building on the discussions and contributions of teams across the Ethereum ecosystem. Forthcoming publications will complement this introductory design with technical specifications, and address gaps like value distribution and trust assumptions. The Blockspace Forum will return later this year, and we look forward to seeing everybody there.
+
+[*Continue the discussion on ethresear.ch.*](https://ethresear.ch/t/building-towards-multi-party-block-construction/24975)
