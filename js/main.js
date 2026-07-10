@@ -171,7 +171,7 @@ function renderFooter() {
   el.innerHTML =
     '<div class="container">' +
       '<div class="footer-bottom">' +
-        '<span>' + SITE_CONFIG.name + ' &middot; Open source initiative &middot; <a href="' + BASE + 'disclaimer.html" class="footer-legal">Disclaimer</a></span>' +
+        '<span>' + SITE_CONFIG.name + ' &middot; Contact at correspondence@ethblockspace.com &middot; <a href="' + BASE + 'disclaimer.html" class="footer-legal">Disclaimer</a></span>' +
         '<div class="footer-socials">' + buildSocialHtml() + '</div>' +
       '</div>' +
     '</div>';
