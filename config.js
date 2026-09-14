@@ -10,10 +10,23 @@ const SITE_CONFIG = {
   tagline: "Forum built to improve the Ethereum transaction journey.",
   description: "Education, research, and open source tooling for the infrastructure that moves Ethereum's transactions. This forum ships.",
 
+  // THIS BANNER IS THE ANNOUNCEMENT. Merging this commit publishes it,
+  // so it should land when the documentation is announced and not
+  // before. It is a separate commit from the Docs nav link for exactly
+  // that reason: the link can go up early, this should not.
+  //
+  // "New Documentation:" follows the pattern the previous banner set
+  // ("New Research: Towards Multi-Party Block Construction"), so the two
+  // read as the same kind of notice. The wording is mine rather than the
+  // brand side's; it is one line and it says what the thing is.
+  //
+  // The link is absolute and points at a different site. renderBanner
+  // handles that from the previous commit; before it, this would have
+  // rendered as a path on this site.
   banner: {
     active: true,
-    text: "New Research: Towards Multi-Party Block Construction",
-    link: "research/towards-mpbc.html",
+    text: "New Documentation: Multi-Party Block Construction",
+    link: "https://docs.blockspace.forum/",
   },
 
   links: {
