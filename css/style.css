@@ -2591,6 +2591,16 @@ footer a:hover {
   color: var(--text-secondary);
 }
 .disclaimer-content h1 { color: var(--text-primary); margin-bottom: 1.5rem; }
+/* The "Last updated" line under the title. Reuses the site's own
+   metadata treatment rather than introducing a second one; the rule is
+   needed because .post-meta is scoped to .post-header elsewhere. */
+.disclaimer-content .post-meta {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  letter-spacing: 0.02em;
+  margin: -1rem 0 2rem;
+}
 .disclaimer-content h2 { color: var(--text-primary); margin-top: 2rem; font-size: 1.1rem; }
 .disclaimer-content h3 { color: var(--text-primary); margin-top: 1.5rem; font-size: 1rem; }
 .disclaimer-content ol { padding-left: 1.5rem; }
