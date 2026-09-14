@@ -1,3 +1,13 @@
+# THE SOURCE OF TRUTH FOR THE BANNER. build.py regenerates config.js's
+# `banner` block from this file and preserves nothing of what is there,
+# so editing config.js alone is undone by the next build.
+#
+# This file held the previous announcement, "New Research: Towards
+# Multi-Party Block Construction", for four days after config.js was
+# changed by hand to announce the documentation. Nothing broke only
+# because build.py does not run: workflows/build.yml is not under
+# .github/, so CI never rebuilds. Whoever restores the build would have
+# rolled the site back to announcing the research post.
 active: true
-text: "New Research: Towards Multi-Party Block Construction"
-link: "research/towards-mpbc.html"
+text: "New Documentation: Multi-Party Block Construction"
+link: "https://docs.blockspace.forum/"
