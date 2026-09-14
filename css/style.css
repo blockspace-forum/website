@@ -1243,6 +1243,28 @@ footer a:hover {
   max-width: 560px;
 }
 
+/* A labelled group inside a section, for when one section holds two
+   kinds of thing. Added 2026-09-15 when the Metrics and Observe sections
+   were collapsed into one: our own dashboard leads, and the community
+   list below it needs saying who builds it.
+
+   An h3 rather than a second h2, because the section still has one
+   heading and this is a part of it. */
+.group-heading {
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--text-primary);
+  margin: 48px 0 6px;
+}
+
+.group-description {
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin: 0 0 20px;
+  max-width: 560px;
+}
+
 .section-header {
   display: flex;
   align-items: baseline;

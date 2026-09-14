@@ -78,7 +78,7 @@ function renderNav() {
           '<li><a href="' + prefix + 'index.html">Home</a></li>' +
           '<li><a href="' + prefix + 'learn.html">Learn</a></li>' +
           '<li><a href="' + prefix + 'research.html">Research</a></li>' +
-          '<li><a href="' + prefix + 'index.html#tooling">Metrics</a></li>' +
+          '<li><a href="' + prefix + 'index.html#tooling">Observe</a></li>' +
           '<li><a href="' + prefix + 'events.html">Events</a></li>' +
           '<li><a href="https://docs.blockspace.forum/" target="_blank" rel="noopener noreferrer">Docs</a></li>' +
         '</ul>' +
