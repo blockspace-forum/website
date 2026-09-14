@@ -94,6 +94,7 @@ const SITE_CONFIG = {
       { name: "Rated Explorer", description: "Validator monitoring", url: "https://explorer.rated.network/" },
       { name: "relayscan.io", description: "Relay monitoring and statistics", url: "https://www.relayscan.io/" },
       { name: "commit-boost.org", description: "Commit-Boost validator sidecar dashboard", url: "https://www.commit-boost.org/" },
+      { name: "pbs.show", description: "Live builder bids through the slot auction", url: "https://pbs.show/" },
     ],
   },
 
