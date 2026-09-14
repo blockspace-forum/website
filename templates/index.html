@@ -179,10 +179,23 @@
     </section>
 
         <!-- 6. Tooling -->
+    <!-- The id stays "tooling" though the label reads Metrics. It is
+         load-bearing: learn/pbs-201.html links to index.html#tooling, and
+         js/main.js keys its nav-active rule on that hash in four places.
+         A label is what a reader sees; an id is what other pages point
+         at, and only one of them is safe to rename. -->
     <section id="tooling" class="section-block">
-      <span class="section-label">Tooling</span>
-      <h2>Coming soon</h2>
-      <p class="section-description">We are working with the community to catalog open source infrastructure for the transaction pipeline. Check back soon.</p>
+      <span class="section-label">Metrics</span>
+      <h2>Multi-party block construction, live on mainnet</h2>
+      <p class="section-description">Blocks built by more than one party, as they are produced. The dashboard is ours; the community-built tools below track the rest of the pipeline.</p>
+      <div class="learn-grid">
+        <a href="https://docs.blockspace.forum/mpbc/live-metrics#overview" target="_blank" rel="noopener noreferrer" class="learn-card card-link">
+          <span class="learn-level">LIVE</span>
+          <h3>MPBC live metrics</h3>
+          <p>Multi-party block construction on mainnet, measured as it runs.</p>
+          <span class="card-arrow">&rarr;</span>
+        </a>
+      </div>
     </section>
 
     <!-- 7. Observe -->
