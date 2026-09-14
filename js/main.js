@@ -80,6 +80,7 @@ function renderNav() {
           '<li><a href="' + prefix + 'research.html">Research</a></li>' +
           '<li><a href="' + prefix + 'index.html#tooling">Tooling</a></li>' +
           '<li><a href="' + prefix + 'events.html">Events</a></li>' +
+          '<li><a href="https://docs.blockspace.forum/" target="_blank" rel="noopener noreferrer">Docs</a></li>' +
         '</ul>' +
         '<div class="nav-socials">' + socialHtml + '</div>' +
       '</div>' +
@@ -755,11 +756,19 @@ function renderBanner() {
     return;
   }
 
+  // An absolute URL is left alone; anything else is a path on this site.
+  // The renderer prefixed BASE unconditionally, which was correct while
+  // every banner pointed at a page here and silently wrong the first time
+  // one pointed at docs.blockspace.forum.
+  var isExternal = /^https?:\/\//.test(banner.link);
+  var bannerHref = isExternal ? banner.link : BASE + banner.link;
+  var bannerRel = isExternal ? ' target="_blank" rel="noopener noreferrer"' : '';
+
   var el = document.createElement('div');
   el.className = 'site-banner';
   el.innerHTML =
     '<div class="container container--wide site-banner-inner">' +
-      '<a href="' + BASE + banner.link + '" class="site-banner-link">' +
+      '<a href="' + bannerHref + '"' + bannerRel + ' class="site-banner-link">' +
         '<span class="site-banner-text">' + banner.text + '</span>' +
         '<span class="site-banner-arrow">&rarr;</span>' +
       '</a>' +
