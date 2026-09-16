@@ -178,20 +178,44 @@
       </div>
     </section>
 
-        <!-- 6. Tooling -->
-    <section id="tooling" class="section-block">
-      <span class="section-label">Tooling</span>
-      <h2>Coming soon</h2>
-      <p class="section-description">We are working with the community to catalog open source infrastructure for the transaction pipeline. Check back soon.</p>
-    </section>
+    <!-- 8. Observe -->
+    <!-- ONE SECTION SINCE 2026-09-15, on the brand owner's instruction:
+         "collapse the community dashboards with our own dashboard under
+         a single observe section and then update the NAV bar also".
 
-    <!-- 7. Observe -->
-    <section class="section-block">
+         It was two. A Metrics section held our own live metrics card and
+         an Observe section held the community list, which put our
+         dashboard and everyone else's in different parts of the page
+         with nothing saying they answer the same question. The staging
+         site made the same move in the same week, so the two sites do
+         not drift while one supersedes the other.
+
+         The id stays "tooling" though the label reads Observe. It is
+         load-bearing: learn/pbs-201.html links to index.html#tooling, and
+         js/main.js keys its nav-active rule on that hash in four places.
+         A label is what a reader sees; an id is what other pages point
+         at, and only one of them is safe to rename. -->
+    <section id="tooling" class="section-block">
       <span class="section-label">Observe</span>
-      <h2>See for yourself</h2>
-      <p class="section-description">Community-built tools and dashboards. Track relay performance, builder market share, transaction latency, and validator behavior across the transaction pipeline.</p>
+      <h2>Multi-party block construction, live on mainnet</h2>
+      <p class="section-description">Multi-party block construction (MPBC) upgrades PBS by expanding block construction from one builder to multiple builders. We believe this approach starts to address the current structural gaps and benefits Ethereum, users, and the actors in the transaction pipeline.</p>
+      <div class="learn-grid">
+        <a href="https://docs.blockspace.forum/mpbc/live-metrics#overview" target="_blank" rel="noopener noreferrer" class="learn-card card-link">
+          <span class="learn-level">LIVE</span>
+          <h3>MPBC live metrics</h3>
+          <p>Multi-party block construction on mainnet, measured as it runs.</p>
+          <span class="card-arrow"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg></span>
+        </a>
+      </div>
+      <!-- The community list, labelled rather than left to follow the
+           card unannounced. Our dashboard leads because it is ours;
+           saying so once here is what keeps the rest correctly
+           attributed. -->
+      <h3 class="group-heading">Community dashboards</h3>
+      <p class="group-description">Built and run by others, tracking relay performance, builder market share, transaction latency, and validator behavior across the transaction pipeline.</p>
       <ul id="tooling-observe-list" class="tools-list"></ul>
     </section>
+
   </main>
 
   <footer id="site-footer"></footer>

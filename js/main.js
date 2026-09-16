@@ -56,6 +56,25 @@ document.addEventListener('click', function(e) {
 
 // ---- Nav ---- //
 
+// Whether a nav href points at THIS site's home page.
+//
+// The endsWith('/') half was written for a root-relative '/' and broke
+// when the Docs link was added on 2026-09-14: that href is
+// 'https://docs.blockspace.forum/', which also ends in '/' and carries
+// no '#', so on the home page it satisfied the same test, and Home and
+// Docs both rendered .active. css/style.css:199 gives .active a
+// brightened colour and a full-width underline, so a visitor to
+// blockspace.forum saw two nav items underlined as the current page.
+//
+// An absolute URL is never this page, whatever it ends with.
+//
+// At module scope rather than inside renderNav so it can be exercised
+// without a DOM, which is how the double-underline was confirmed.
+function isHere(href) {
+  if (/^[a-z][a-z0-9+.-]*:\/\//i.test(href)) return false;
+  return (href.endsWith('index.html') || href.endsWith('/')) && !href.includes('#');
+}
+
 function renderNav() {
   const el = document.getElementById('site-nav');
   if (!el) return;
@@ -78,8 +97,9 @@ function renderNav() {
           '<li><a href="' + prefix + 'index.html">Home</a></li>' +
           '<li><a href="' + prefix + 'learn.html">Learn</a></li>' +
           '<li><a href="' + prefix + 'research.html">Research</a></li>' +
-          '<li><a href="' + prefix + 'index.html#tooling">Tooling</a></li>' +
+          '<li><a href="' + prefix + 'index.html#tooling">Observe</a></li>' +
           '<li><a href="' + prefix + 'events.html">Events</a></li>' +
+          '<li><a href="https://docs.blockspace.forum/" target="_blank" rel="noopener noreferrer">Docs</a></li>' +
         '</ul>' +
         '<div class="nav-socials">' + socialHtml + '</div>' +
       '</div>' +
@@ -137,13 +157,13 @@ function renderNav() {
         a.classList.add('active');
       } else if (activeLink === 'learn' && href.includes('learn') && !href.includes('#')) {
         a.classList.add('active');
-      } else if (activeLink === 'home' && (href.endsWith('index.html') || href.endsWith('/')) && !href.includes('#')) {
+      } else if (activeLink === 'home' && isHere(href)) {
         a.classList.add('active');
       }
     });
   }
 
-  // Update active state on hash change (e.g. clicking Tooling from Home)
+  // Update active state on hash change (e.g. clicking Observe from Home)
   window.addEventListener('hashchange', function() {
     el.querySelectorAll('.nav-links a.active').forEach(function(a) {
       a.classList.remove('active');
@@ -156,7 +176,7 @@ function renderNav() {
     } else if (!newHash) {
       el.querySelectorAll('.nav-links a').forEach(function(a) {
         var href = a.getAttribute('href');
-        if ((href.endsWith('index.html') || href.endsWith('/')) && !href.includes('#')) a.classList.add('active');
+        if (isHere(href)) a.classList.add('active');
       });
     }
   });
@@ -755,11 +775,19 @@ function renderBanner() {
     return;
   }
 
+  // An absolute URL is left alone; anything else is a path on this site.
+  // The renderer prefixed BASE unconditionally, which was correct while
+  // every banner pointed at a page here and silently wrong the first time
+  // one pointed at docs.blockspace.forum.
+  var isExternal = /^https?:\/\//.test(banner.link);
+  var bannerHref = isExternal ? banner.link : BASE + banner.link;
+  var bannerRel = isExternal ? ' target="_blank" rel="noopener noreferrer"' : '';
+
   var el = document.createElement('div');
   el.className = 'site-banner';
   el.innerHTML =
     '<div class="container container--wide site-banner-inner">' +
-      '<a href="' + BASE + banner.link + '" class="site-banner-link">' +
+      '<a href="' + bannerHref + '"' + bannerRel + ' class="site-banner-link">' +
         '<span class="site-banner-text">' + banner.text + '</span>' +
         '<span class="site-banner-arrow">&rarr;</span>' +
       '</a>' +
