@@ -40,8 +40,8 @@
     </div>
 
     <div class="post-content">
-      <p class="tldr"><strong>TL;DR:</strong> We strongly advocate that clients who request multiple bids per builder keep the latest not the highest. If clients offer the highest as a hardcoded option, the second order impact has implications on the robustness, performance, and economics of Ethereum and its stakeholders.</p>
-<ol>
+      <p><strong>TL;DR: We strongly advocate that clients who request multiple bids per builder keep the latest not the highest. If clients offer the highest as a hardcoded option, the second order impact has implications on the robustness, performance, and economics of Ethereum and its stakeholders.</strong></p>
+<ul>
 <li>Builders build thousands of blocks per slot and change bid values both up and down throughout the slot to reflect the rapid changes in the market.</li>
 <li>For years, most sidecars and relays have respected the builder’s latest bid, rather than selecting a stale bid that may be higher.</li>
 <li>However, as changes are rolled out for ePBS and beacon nodes implement functionality from sidecars, <a href="https://discord.com/channels/595666850260713488/1561889210032455730/1561889216214859858">some</a> <a href="https://discord.com/channels/595666850260713488/1561889210032455730/1561889216214859858">clients</a> are <a href="https://discord.com/channels/595666850260713488/1561889210032455730">discussing</a> absorbing the feature to request multiple bids per builder but to capture the highest instead of latest.</li>
@@ -58,10 +58,8 @@
 <li>A similar dynamic applies to builders, where incumbents can more easily make these agreements with large operators and bid higher on average compared to new builders who do not have these same connections and agreements. Further, for those proposers who still choose to take the highest bid within a slot, the ability to accurately price risk and time a withheld bid with network jitter, increases the sophistication required to be a profitable builder. Both in isolation and in combination these dynamics further increase the barrier to entry for new builders to compete or enter the market.</li>
 </ol>
 </li>
-<li>
-<p>In conclusion, we strongly advocate that clients should be written to respect the latest bid per builder, not the highest, and we encourage proposers and responsible builders to advocate for this position.</p>
-</li>
-</ol>
+</ul>
+<p><strong>In conclusion, we strongly advocate that clients should be written to respect the latest bid per builder, not the highest, and we encourage proposers and responsible builders to advocate for this position.</strong></p>
 <h2>FAQ</h2>
 <ol>
 <li>
