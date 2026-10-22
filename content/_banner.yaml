@@ -8,6 +8,14 @@
 # because build.py does not run: workflows/build.yml is not under
 # .github/, so CI never rebuilds. Whoever restores the build would have
 # rolled the site back to announcing the research post.
+#
+# The current notice. "New Documentation:" follows the pattern of the
+# previous banner ("New Research: Towards Multi-Party Block
+# Construction"), so the two read as the same kind of notice. Publishing
+# it was timed to land when the documentation was announced, as its own
+# commit. The link is absolute and points at a different site;
+# renderBanner handles that. (Moved here from a comment in config.js on
+# 2026-10-21, because build.py rewrites config.js and drops comments.)
 active: true
 text: "New Documentation: Multi-Party Block Construction"
 link: "https://docs.blockspace.forum/"

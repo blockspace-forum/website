@@ -34,6 +34,11 @@ LEARN_CONTENT_DIR = SITE_DIR / "content" / "learn"
 LEARN_DIR = SITE_DIR / "learn"
 RESEARCH_CONTENT_DIR = SITE_DIR / "content" / "research"
 RESEARCH_DIR = SITE_DIR / "research"
+# "Our Takes": the Forum's own positions, listed in their own section on
+# research.html. Built exactly as research pages are, from their own folder,
+# so a take never appears in the Technical Research list or on the homepage.
+TAKES_CONTENT_DIR = SITE_DIR / "content" / "takes"
+TAKES_DIR = SITE_DIR / "takes"
 
 # ---- Frontmatter Parser ---- #
 
@@ -249,7 +254,7 @@ def build_posts():
 
 # ---- Build Config ---- #
 
-def build_config(posts_meta, research_pages):
+def build_config(posts_meta, research_pages, take_pages=()):
     """Generate config.js from post metadata, research pages, and existing link config."""
 
     # Read banner config
@@ -327,6 +332,17 @@ def build_config(posts_meta, research_pages):
     research_entries.extend(hardcoded_research)
     research_js = ",\n".join(research_entries)
 
+    # Takes from content/takes/*.md, for the "Our Takes" section.
+    takes_js = ",\n".join([
+        f'''    {{
+      title: "{t['title']}",
+      authors: "{t['authors']}",
+      date: "{t['date']}",
+      summary: "{t['subtitle']}",
+      url: "takes/{t['slug']}.html",
+    }}''' for t in take_pages
+    ])
+
     links = {
         "twitter": existing_links.get("twitter", "https://x.com/blockspaceforum"),
         "github": existing_links.get("github", "https://github.com/blockspace-forum"),
@@ -363,6 +379,7 @@ def build_config(posts_meta, research_pages):
 //   posts         front matter in content/*.md
 //   research      content/research/*.md, plus four external entries
 //                 hardcoded in build.py
+//   takes         content/takes/*.md, the "Our Takes" section
 //   name, tagline, description, tooling, contribute, events
 //                 literals in build.py's own template. Edit them there,
 //                 or edit both and keep the two in step.
@@ -391,6 +408,10 @@ const SITE_CONFIG = {{
 
   research: [
 {research_js}
+  ],
+
+  takes: [
+{takes_js}
   ],
 
   tooling: {{
@@ -616,16 +637,26 @@ def build_learn():
 
 # ---- Build Pages ---- #
 
-def build_research():
-    """Read content/research/*.md, generate research/*.html, return page metadata."""
-    md_files = sorted(RESEARCH_CONTENT_DIR.glob("*.md"))
+def build_research(content_dir=RESEARCH_CONTENT_DIR, out_dir=RESEARCH_DIR, keep_indent=False):
+    """Read <content_dir>/*.md, generate <out_dir>/*.html, return page metadata.
+
+    Research pages and takes share this, and research-post.html, so a take
+    looks like a research page. The folder name goes into the template as
+    {{dir}} for the canonical URL.
+
+    keep_indent leaves each line's leading spaces in place. Research pages
+    strip them, which flattens nested lists; takes keep them, because a
+    take's argument is a numbered list with sub-points.
+    """
+    md_files = sorted(content_dir.glob("*.md"))
     if not md_files:
         return []
 
     template = load_template("research-post.html")
     pages = []
+    dir_name = out_dir.name
 
-    RESEARCH_DIR.mkdir(exist_ok=True)
+    out_dir.mkdir(exist_ok=True)
 
     for md_file in md_files:
         text = md_file.read_text()
@@ -647,7 +678,8 @@ def build_research():
         authors_html = f" · By {authors}" if authors else ""
 
         # Clean up leading whitespace
-        body = '\n'.join(line.strip() for line in body.split('\n'))
+        if not keep_indent:
+            body = '\n'.join(line.strip() for line in body.split('\n'))
 
         # Join multi-line table cells before markdown conversion
         body = join_multiline_table_cells(body)
@@ -671,14 +703,15 @@ def build_research():
             "date": date,
             "authors_html": authors_html,
             "slug": slug,
+            "dir": dir_name,
             "content": content_html,
             "base": "../",
             "site_url": SITE_URL,
         })
 
-        out_path = RESEARCH_DIR / f"{slug}.html"
+        out_path = out_dir / f"{slug}.html"
         out_path.write_text(html)
-        print(f"  Built research/{slug}.html")
+        print(f"  Built {dir_name}/{slug}.html")
 
         pages.append({
             "slug": slug,
@@ -708,13 +741,16 @@ def clean():
     for f in RESEARCH_DIR.glob("*.html"):
         f.unlink()
         print(f"  Removed research/{f.name}")
+    for f in TAKES_DIR.glob("*.html"):
+        f.unlink()
+        print(f"  Removed takes/{f.name}")
 
 
 # ---- Build Sitemap ---- #
 
 SITE_URL = "https://blockspace.forum"
 
-def build_sitemap(posts_meta, learn_pages, research_pages):
+def build_sitemap(posts_meta, learn_pages, research_pages, take_pages=()):
     """Generate sitemap.xml from all pages."""
     from datetime import date as d
     today = d.today().isoformat()
@@ -752,6 +788,12 @@ def build_sitemap(posts_meta, learn_pages, research_pages):
     <lastmod>{today}</lastmod>
     <priority>0.8</priority>
   </url>""")
+    for page in take_pages:
+        urls.append(f"""  <url>
+    <loc>{SITE_URL}/takes/{page['slug']}.html</loc>
+    <lastmod>{today}</lastmod>
+    <priority>0.8</priority>
+  </url>""")
 
     # Posts
     for post in posts_meta:
@@ -780,11 +822,12 @@ def main():
     print("Building...")
     posts_meta = build_posts()
     research_pages = build_research()
-    build_config(posts_meta, research_pages)
+    take_pages = build_research(TAKES_CONTENT_DIR, TAKES_DIR, keep_indent=True)
+    build_config(posts_meta, research_pages, take_pages)
     learn_pages = build_learn()
     build_pages()
-    build_sitemap(posts_meta, learn_pages, research_pages)
-    print(f"\nDone. {len(posts_meta)} posts, {len(learn_pages)} learn pages, {len(research_pages)} research pages built.")
+    build_sitemap(posts_meta, learn_pages, research_pages, take_pages)
+    print(f"\nDone. {len(posts_meta)} posts, {len(learn_pages)} learn pages, {len(research_pages)} research pages, {len(take_pages)} takes built.")
 
 if __name__ == "__main__":
     main()

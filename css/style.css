@@ -587,6 +587,13 @@ nav .container {
   font-size: 1em;
 }
 
+/* A TL;DR paragraph opening a take: the label stays white (it is
+   <strong>), and the sentence after it takes the body's gray rather than
+   the lead paragraph's white. Set in the Markdown with {: .tldr }. */
+.post-content > p.tldr {
+  color: var(--text-secondary);
+}
+
 .post-content h2 {
   font-size: 1.15em;
   font-weight: 700;
