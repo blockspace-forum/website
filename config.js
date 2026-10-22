@@ -13,6 +13,7 @@
 //   posts         front matter in content/*.md
 //   research      content/research/*.md, plus four external entries
 //                 hardcoded in build.py
+//   takes         content/takes/*.md, the "Our Takes" section
 //   name, tagline, description, tooling, contribute, events
 //                 literals in build.py's own template. Edit them there,
 //                 or edit both and keep the two in step.
@@ -33,19 +34,6 @@ const SITE_CONFIG = {
   tagline: "Forum built to improve the Ethereum transaction journey.",
   description: "Education, research, and open source tooling for the infrastructure that moves Ethereum's transactions. This forum ships.",
 
-  // THIS BANNER IS THE ANNOUNCEMENT. Merging this commit publishes it,
-  // so it should land when the documentation is announced and not
-  // before. It is a separate commit from the Docs nav link for exactly
-  // that reason: the link can go up early, this should not.
-  //
-  // "New Documentation:" follows the pattern the previous banner set
-  // ("New Research: Towards Multi-Party Block Construction"), so the two
-  // read as the same kind of notice. The wording is mine rather than the
-  // brand side's; it is one line and it says what the thing is.
-  //
-  // The link is absolute and points at a different site. renderBanner
-  // handles that from the previous commit; before it, this would have
-  // rendered as a path on this site.
   banner: {
     active: true,
     text: "New Documentation: Multi-Party Block Construction",
@@ -102,6 +90,16 @@ const SITE_CONFIG = {
       summary: "A mechanism for relays to enforce transaction inclusion, improving censorship resistance without protocol changes.",
       url: "https://ethresear.ch/t/relay-inclusion-lists/22218",
       featured: true
+    }
+  ],
+
+  takes: [
+    {
+      title: "Keep the latest bid, not the highest",
+      authors: "Blockspace Forum",
+      date: "Oct 2026",
+      summary: "We strongly advocate that clients who request multiple bids per builder keep the latest not the highest.",
+      url: "takes/keep-the-latest-bid.html",
     }
   ],
 

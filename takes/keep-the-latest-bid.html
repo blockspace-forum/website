@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Keep the latest bid, not the highest — Blockspace Forum</title>
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Keep the latest bid, not the highest — Blockspace Forum">
+  <meta property="og:description" content="We strongly advocate that clients who request multiple bids per builder keep the latest not the highest.">
+  <meta property="og:image" content="https://blockspace.forum/assets/og-image.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@blockspaceforum">
+  <meta name="twitter:title" content="Keep the latest bid, not the highest — Blockspace Forum">
+  <meta name="twitter:description" content="We strongly advocate that clients who request multiple bids per builder keep the latest not the highest.">
+  <meta name="twitter:image" content="https://blockspace.forum/assets/og-image.png">
+  <meta name="description" content="We strongly advocate that clients who request multiple bids per builder keep the latest not the highest.">
+  <link rel="canonical" href="https://blockspace.forum/takes/keep-the-latest-bid.html">
+  <link rel="icon" href="../assets/favicon.ico">
+  <link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"
+    onload="renderMathInElement(document.querySelector('.post-content'), {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$', right: '$', display: false}
+      ],
+      throwOnError: false
+    });"></script>
+</head>
+<body data-base="../">
+  <nav id="site-nav"></nav>
+
+  <main class="container">
+    <div class="post-header">
+      <div class="post-meta">Oct 2026 · By Blockspace Forum</div>
+      <h1>Keep the latest bid, not the highest</h1>
+      <div class="post-subtitle">We strongly advocate that clients who request multiple bids per builder keep the latest not the highest.</div>
+    </div>
+
+    <div class="post-content">
+      <p class="tldr"><strong>TL;DR:</strong> We strongly advocate that clients who request multiple bids per builder keep the latest not the highest. If clients offer the highest as a hardcoded option, the second order impact has implications on the robustness, performance, and economics of Ethereum and its stakeholders.</p>
+<ol>
+<li>Builders build thousands of blocks per slot and change bid values both up and down throughout the slot to reflect the rapid changes in the market.</li>
+<li>For years, most sidecars and relays have respected the builder’s latest bid, rather than selecting a stale bid that may be higher.</li>
+<li>However, as changes are rolled out for ePBS and beacon nodes implement functionality from sidecars, <a href="https://discord.com/channels/595666850260713488/1561889210032455730/1561889216214859858">some</a> <a href="https://discord.com/channels/595666850260713488/1561889210032455730/1561889216214859858">clients</a> are <a href="https://discord.com/channels/595666850260713488/1561889210032455730">discussing</a> absorbing the feature to request multiple bids per builder but to capture the highest instead of latest.</li>
+<li>While it intuitively makes sense that a proposer wants to maximize their own profit and select the highest bid, this is a short-term game that will 1) lead to less profit for proposers, 2) create a divergence of yield when comparing well-resourced proposers vs under-resourced proposers, and 3) further centralize the builder market by increasing barriers to entry.</li>
+<li>With this in mind, we strongly disagree with the direction some clients are moving and lay out our logic below.</li>
+<li>If proposers can take the highest of all bids they receive per builder, builders will likely respond by shading or withholding bids to hedge against changes in market conditions.</li>
+<li>This is the same way risk gets priced in nearly every market on Earth. A firm quote that has to stand while the market moves will be sniped if the opportunity and option exists, and any rational actor giving that firm quote will start to charge for that option through wider spreads. In this context, this means builders who have to provide a firm quote while markets move will offer less to proposers due to the additional risk they are underwriting.</li>
+<li>Further, we have heard of this reducing pricing in practice. Historically, some validators forked or used software that allows them to select the highest bid and started to observe lower rewards or received warnings from builders that if they continued they would receive less / less competitive bids.</li>
+<li>
+<p>The result of this is:</p>
+<ol>
+<li>Proposer revenue decreases as builders bid less to cover the risk of market conditions changing after their bid is locked in.</li>
+<li>Larger staking operators who can coordinate directly with builders can and will create off-chain arrangements where they are trusted/legally compelled to respect cancellations and benefit from better bids, priced to the latest market. Less connected or resourced stakers obviously cannot benefit from this and will earn less and be at a significant disadvantage.</li>
+<li>A similar dynamic applies to builders, where incumbents can more easily make these agreements with large operators and bid higher on average compared to new builders who do not have these same connections and agreements. Further, for those proposers who still choose to take the highest bid within a slot, the ability to accurately price risk and time a withheld bid with network jitter, increases the sophistication required to be a profitable builder. Both in isolation and in combination these dynamics further increase the barrier to entry for new builders to compete or enter the market.</li>
+</ol>
+</li>
+<li>
+<p>In conclusion, we strongly advocate that clients should be written to respect the latest bid per builder, not the highest, and we encourage proposers and responsible builders to advocate for this position.</p>
+</li>
+</ol>
+<h2>FAQ</h2>
+<ol>
+<li>
+<p>Can’t a builder just bid once per slot, so it never needs to replace a bid?</p>
+<ul>
+<li>Rather than send multiple shaded bids, builders can try to infer the final bid request and send a single bid as late as possible. If the bid is mistimed or there is network jitter, the bid can be missed and the proposer loses out. Recent features like bid streams improve robustness by streaming bids throughout the slot. If the default is select highest, bid streams would be relegated to the larger trusted staking operators rather than the smaller untrusted staking operators that benefit from robustness improvements the most.</li>
+</ul>
+</li>
+<li>
+<p>Won’t a rational proposer modify client software to keep the highest anyway?</p>
+<ul>
+<li>They can, and forking can’t be prevented, but proposers have been able to do this for years and mainstream software still keeps the latest. Modifying a sidecar takes effort and carries less risk to the network than forking a beacon node, and builders can respond to operators who do it. A client flag removes that effort for every operator.</li>
+</ul>
+</li>
+<li>
+<p>Isn’t lowering a bid because an arbitrage didn’t go your way dishonest to proposers?</p>
+<ul>
+<li>The latest bid is the builder’s honest bid, because the earlier one priced information that’s no longer true, and proposers earn more on average when builders can bid full value in every slot.</li>
+</ul>
+</li>
+<li>
+<p>Can’t builders just leave out transactions they’re unsure about?</p>
+<ul>
+<li>This is just another form of bid shading. If the block loses the value of those transactions, the proposer gets paid less, and searchers route the transactions to the builders with private agreements with large operators.</li>
+</ul>
+</li>
+<li>
+<p>Highest per builder or total?</p>
+<ul>
+<li>We&rsquo;re advocating that if you request multiple bids from a single builder to select the latest, but to take the highest cross all builders as sidecars do today.</li>
+</ul>
+</li>
+</ol>
+    </div>
+  </main>
+
+  <footer id="site-footer"></footer>
+
+  <script src="../config.js"></script>
+  <script src="../js/main.js"></script>
+</body>
+</html>

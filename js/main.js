@@ -134,7 +134,8 @@ function renderNav() {
   // Most specific matches first to avoid double-highlighting
   if (hash === '#tooling' && (path.endsWith('/') || path.endsWith('index.html'))) {
     activeLink = 'tooling';
-  } else if (path.includes('research')) {
+  } else if (path.includes('research') || path.includes('takes/')) {
+    // A take lives under takes/ and is listed on research.html.
     activeLink = 'research';
   } else if (path.includes('learn/series')) {
     activeLink = 'research';
@@ -241,6 +242,26 @@ function renderResearchList(containerId, featured) {
       '<p>We are actively working on new research. Stay tuned.</p>';
     container.appendChild(soon);
   }
+}
+
+// ---- Our Takes ---- //
+
+// The Forum's own positions, from SITE_CONFIG.takes (content/takes/*.md).
+// Same card as a research entry, so the two sections on research.html
+// read as one family.
+function renderTakesList(containerId) {
+  var container = document.getElementById(containerId);
+  if (!container) return;
+  (SITE_CONFIG.takes || []).forEach(function(item) {
+    var el = document.createElement('a');
+    el.href = item.url;
+    el.className = 'research-card card-link';
+    el.innerHTML = '<h3>' + item.title + '</h3>' +
+      '<p class="card-meta">' + item.date + '</p>' +
+      '<p>' + item.summary + '</p>' +
+      '<span class="card-arrow">' + ICONS.arrow + '</span>';
+    container.appendChild(el);
+  });
 }
 
 // ---- Tooling: Operate ---- //

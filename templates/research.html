@@ -28,7 +28,16 @@
       <p>Published research and analysis from Blockspace Forum contributors.</p>
     </section>
 
+    <!-- OUR TAKES, added 2026-10-21 on the brand owner's instruction. The
+         Forum's own positions; each is content/takes/<slug>.md, built to
+         takes/<slug>.html. The description line is placeholder copy. -->
     <section class="section-block" style="border-top: none;">
+      <h2 id="our-takes">Our Takes</h2>
+      <p class="section-description">Where the Blockspace Forum stands on the questions shaping Ethereum&rsquo;s transaction pipeline.</p>
+      <div id="research-takes" class="research-grid"></div>
+    </section>
+
+    <section class="section-block">
       <h2 id="events">Events</h2>
       <p class="section-description">Recaps and resources from Blockspace Forum gatherings.</p>
       <div id="research-events" class="learn-posts-grid"></div>
@@ -52,6 +61,7 @@
   <script src="config.js"></script>
   <script src="js/main.js"></script>
   <script>
+    renderTakesList('research-takes');
     renderLearnEvents('research-events');
     renderResearchList('research-technical', false);
     renderPostList('research-writing');
